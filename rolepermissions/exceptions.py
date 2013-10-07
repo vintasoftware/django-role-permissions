@@ -1,0 +1,4 @@
+
+
+class CheckerNotRegistered(Exception):
+    pass
