@@ -1,4 +1,5 @@
 Django==1.5.4
 model-mommy==1.1
 django-discover-runner==1.0
+South==0.8.2
 

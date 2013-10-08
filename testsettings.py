@@ -15,6 +15,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
 
     'discover_runner',
+    'south',
 
     'rolepermissions',
 )
