@@ -17,7 +17,7 @@ def has_role_template_tag(user, role):
 
 
 @register.assignment_tag(name='can', takes_context=True)
-def has_permission_template_tag(context, permission, obj, user=None):
+def has_object_permission_template_tag(context, permission, obj, user=None):
     if not user:
         user = context['user']
 
