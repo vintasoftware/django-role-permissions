@@ -4,6 +4,7 @@ A django app for role based permissions.
 
 ## Instaling
 
+
 ## Roles file
 
 ## Object permission checker
@@ -12,11 +13,11 @@ A django app for role based permissions.
 
 ## Shortcuts
 
+## Template tags
+
 ## Decorators
 
 ## Mixins
-
-## Template tags
 
 ## Contributing
 
