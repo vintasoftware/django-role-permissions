@@ -14,7 +14,8 @@ Contents:
    setup
    roles
    checkers
-
+   functions
+   utilities
 
 
 Indices and tables

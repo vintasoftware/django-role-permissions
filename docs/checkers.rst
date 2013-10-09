@@ -28,7 +28,4 @@ registered object permission checker functions.
         return False
 
 when requested the object permission checker will receive the role of the user,
-the user object and the object being verified.
-
-
-
+the user and the object being verified.
