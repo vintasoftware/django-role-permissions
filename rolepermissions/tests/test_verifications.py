@@ -6,7 +6,7 @@ from model_mommy import mommy
 
 from rolepermissions.roles import RolesManager, AbstractUserRole
 from rolepermissions.verifications import has_role, has_permission, has_object_permission
-from rolepermissions.permissions import PermissionsManager, register_object_checker
+from rolepermissions.permissions import register_object_checker
 from rolepermissions.models import UserPermission
 
 
@@ -30,7 +30,7 @@ class Role3(AbstractUserRole):
     }
 
 
-class TestHasRoleTests(TestCase):
+class HasRoleTests(TestCase):
 
     def setUp(self):
         RolesManager.register_role(Role1)

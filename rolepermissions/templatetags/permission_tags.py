@@ -8,7 +8,8 @@ register = template.Library()
 
 @register.filter(name='has_role')
 def has_role_template_tag(user, role):
-    return has_role(user, role)
+    role_list = role.split(',')
+    return has_role(user, role_list)
 
 
 @register.filter(name='can')
@@ -17,7 +18,7 @@ def has_role_template_tag(user, role):
 
 
 @register.assignment_tag(name='can', takes_context=True)
-def has_object_permission_template_tag(context, permission, obj, user=None):
+def has_permission_template_tag(context, permission, obj, user=None):
     if not user:
         user = context['user']
 
