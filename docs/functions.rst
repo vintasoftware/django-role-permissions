@@ -7,13 +7,34 @@ Shortcuts
 
 .. function:: get_user_role(user)
 
+.. code-block:: python
+    
+    from rolepermissions.shortcuts import get_user_role
+
+    role = get_user_role(user)
+
 .. function:: get_user_permissions(user)
     
 Returns a dictionary containg all permissions available to the role of the specified user. 
 Permissions are the keys of the dictionary, and values are ```True``` or ```False``` indicating if the 
 permission is granted or not.
 
+.. code-block:: python
+    
+    from rolepermissions.shortcuts import get_user_permissions
+
+    permissions = get_user_permissions(user)
+
+    if permissions['create_medical_record']:
+        print 'user can create medical record'
+
 .. function:: grant_permission(user, permission_name):
+
+.. code-block:: python
+    
+    from rolepermissions.shortcuts import grant_permission
+
+    grant_permission(user, 'create_medical_record')
 
 Permission and role verification
 ================================
@@ -62,5 +83,46 @@ Receives a string referencing the object permission checker, a user and the obje
 
 Template tags
 =============
+
+To load template tags use:
+
+.. code-block:: python
+
+    {% load permission_tags %}
+
+.. function:: *filter* has_role
+
+Receives a camel case representation of a role or more than one separated by coma.
+
+.. code-block:: python
+
+    {% load permission_tags %}
+    {% if user|has_role:'doctor,nurse' %}
+        the user is a doctor or a nurse
+    {% endif %}
+
+.. function:: *filter* can
+
+Role permission filter.
+
+.. code-block:: python
+
+    {% load permission_tags %}
+    {% if user|can:'create_medical_record' %}
+        <a href="/create_record">create record</a>
+    {% endif %}
+
+.. function:: *tag* can
+
+If no user is passed to the tag, the logged user will be used in the verification.
+
+.. code-block:: python
+
+    {% load permission_tags %}
+
+    {% can "access_clinic" clinic user=user as can_access_clinic %}
+    {% if can_access_clinic %}
+        <a href="/clinic/1/">Clinic</a>
+    {% endif %}
 
 
