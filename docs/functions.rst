@@ -124,5 +124,3 @@ If no user is passed to the tag, the logged user will be used in the verificatio
     {% if can_access_clinic %}
         <a href="/clinic/1/">Clinic</a>
     {% endif %}
-
-
