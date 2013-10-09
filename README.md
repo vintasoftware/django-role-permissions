@@ -2,6 +2,11 @@
 
 A django app for role based permissions.
 
+# Documentation
+
+Documentation is available at:
+
+[http://django-role-permissions.readthedocs.org/](http://django-role-permissions.readthedocs.org/)
 
 # LICENSE
 
