@@ -2,13 +2,13 @@
 
 A django app for role based permissions.
 
-# Documentation
+## Documentation
 
 Documentation is available at:
 
 [http://django-role-permissions.readthedocs.org/](http://django-role-permissions.readthedocs.org/)
 
-# LICENSE
+## LICENSE
 
 The MIT License (MIT)
 
