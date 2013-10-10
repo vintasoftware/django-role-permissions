@@ -1,5 +1,7 @@
 # django-role-permissions
 
+[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/d0357d26ee3d462e450f81411ac7ed5f "githalytics.com")](http://githalytics.com/vintasoftware/django-role-permissions)
+
 A django app for role based permissions.
 
 ## Documentation
