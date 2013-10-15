@@ -36,6 +36,14 @@ permission is granted or not.
 
     grant_permission(user, 'create_medical_record')
 
+.. function:: revoke_permission(user, permission_name):
+
+.. code-block:: python
+    
+    from rolepermissions.shortcuts import revoke_permission
+
+    revoke_permission(user, 'create_medical_record')
+
 Permission and role verification
 ================================
 

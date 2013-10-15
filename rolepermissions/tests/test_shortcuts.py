@@ -7,7 +7,8 @@ from model_mommy import mommy
 
 from rolepermissions.roles import RolesManager, AbstractUserRole
 from rolepermissions.shortcuts import (
-    get_user_role, get_user_permissions, grant_permission
+    get_user_role, get_user_permissions, grant_permission,
+    revoke_permission,
 )
 from rolepermissions.models import UserPermission
 from rolepermissions.verifications import has_permission
@@ -144,3 +145,32 @@ class GrantPermissionTests(TestCase):
         user = self.user
 
         self.assertFalse(grant_permission(user, 'permission1'))
+
+class RevokePermissionTests(TestCase):
+
+    def setUp(self):
+        RolesManager.register_role(Role1)
+        RolesManager.register_role(Role2)
+        RolesManager.register_role(Role3)
+
+        self.user = mommy.make(get_user_model())
+        self.user_role = Role2.assign_role_to_user(self.user)
+
+    def test_revoke_permission(self):
+        user = self.user
+        
+        self.assertTrue(revoke_permission(user, 'permission3'))
+
+        self.assertFalse(has_permission(user, 'permission3'))
+
+    def test_revoke_revoked_permission(self):
+        user = self.user
+        
+        self.assertTrue(revoke_permission(user, 'permission4'))
+
+        self.assertFalse(has_permission(user, 'permission4'))
+
+    def test_not_allowed_permission(self):
+        user = self.user
+
+        self.assertFalse(revoke_permission(user, 'permission1'))

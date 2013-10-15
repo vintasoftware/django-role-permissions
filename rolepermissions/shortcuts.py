@@ -45,3 +45,18 @@ def grant_permission(user, permission_name):
         return True
 
     return False
+
+
+def revoke_permission(user, permission_name):
+    user_permissions = get_user_permissions(user)
+
+    if permission_name in user_permissions:
+        permission = UserPermission.objects.get(user=user, 
+            permission_name=permission_name)
+
+        permission.is_granted = False
+        permission.save()
+
+        return True
+
+    return False
