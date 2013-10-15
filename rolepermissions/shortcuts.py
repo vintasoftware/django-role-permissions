@@ -19,15 +19,16 @@ def get_user_permissions(user):
     permissions = { p.permission_name: p for p in permissions }
 
     user_permissions = []
-    for permission_name in role.permission_list():
-        if permission_name in permissions:
-            permission = permissions[permission_name]
-        else:
-            permission = UserPermission(user=user, 
-                permission_name=permission_name, 
-                is_granted=role.get_default(permission_name))
-            permission.save()
-        user_permissions.append(permission)
+    if role:
+        for permission_name in role.permission_list():
+            if permission_name in permissions:
+                permission = permissions[permission_name]
+            else:
+                permission = UserPermission(user=user, 
+                    permission_name=permission_name, 
+                    is_granted=role.get_default(permission_name))
+                permission.save()
+            user_permissions.append(permission)
 
     permission_hash = { p.permission_name: p.is_granted for p in user_permissions }
 
