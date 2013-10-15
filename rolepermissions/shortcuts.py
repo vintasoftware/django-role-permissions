@@ -60,3 +60,7 @@ def revoke_permission(user, permission_name):
         return True
 
     return False
+
+
+def retrieve_role(role_name):
+    return RolesManager.retrieve_role(role_name)

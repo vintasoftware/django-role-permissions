@@ -8,7 +8,7 @@ from model_mommy import mommy
 from rolepermissions.roles import RolesManager, AbstractUserRole
 from rolepermissions.shortcuts import (
     get_user_role, get_user_permissions, grant_permission,
-    revoke_permission,
+    revoke_permission, retrieve_role,
 )
 from rolepermissions.models import UserPermission
 from rolepermissions.verifications import has_permission
@@ -174,3 +174,21 @@ class RevokePermissionTests(TestCase):
         user = self.user
 
         self.assertFalse(revoke_permission(user, 'permission1'))
+
+
+class RetrieveRole(TestCase):
+
+    def setUp(self):
+        RolesManager.register_role(Role1)
+        RolesManager.register_role(Role2)
+        RolesManager.register_role(Role3)
+
+    def test_retrive_role1(self):
+        self.assertEquals(retrieve_role('role1'), Role1)
+
+    def test_retrive_role2(self):
+        self.assertEquals(retrieve_role('role2'), Role2)
+
+    def test_retrive_role3(self):
+        self.assertEquals(retrieve_role('new_name'), Role3)
+

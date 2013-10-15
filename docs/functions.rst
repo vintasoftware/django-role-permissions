@@ -44,6 +44,17 @@ permission is granted or not.
 
     revoke_permission(user, 'create_medical_record')
 
+.. function:: retrieve_role(role_name):
+
+.. code-block:: python
+    
+    from rolepermissions.shortcuts import retrieve_role
+    from my_project.roles import Doctor
+
+    role = retrieve_role('doctor')
+
+    assert role == Doctor
+
 Permission and role verification
 ================================
 
