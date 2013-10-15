@@ -5,6 +5,7 @@ from django.http import Http404
 
 from model_mommy import mommy
 
+from rolepermissions.exceptions import RoleDoesNotExist
 from rolepermissions.roles import RolesManager, AbstractUserRole
 from rolepermissions.shortcuts import (
     get_user_role, get_user_permissions, grant_permission,
@@ -12,6 +13,7 @@ from rolepermissions.shortcuts import (
 )
 from rolepermissions.models import UserPermission
 from rolepermissions.verifications import has_permission
+
 
 
 class Role1(AbstractUserRole):
@@ -191,4 +193,9 @@ class RetrieveRole(TestCase):
 
     def test_retrive_role3(self):
         self.assertEquals(retrieve_role('new_name'), Role3)
+
+    def test_retrieve_unknowun_role(self):
+        with self.asserRaises(RoleDoesNotExist):
+            retrieve_role('unknowun_role')
+
 

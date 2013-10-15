@@ -1,8 +1,10 @@
 
 from django.http import Http404
 
+from rolepermissions.exceptions import RoleDoesNotExist
 from rolepermissions.roles import RolesManager
 from rolepermissions.models import UserPermission
+
 
 def get_user_role(user):
     if hasattr(user, 'role'):
@@ -63,4 +65,8 @@ def revoke_permission(user, permission_name):
 
 
 def retrieve_role(role_name):
-    return RolesManager.retrieve_role(role_name)
+    role = RolesManager.retrieve_role(role_name)
+    if role is None:
+        raise RoleDoesNotExist
+
+    return role
