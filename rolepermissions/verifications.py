@@ -40,7 +40,7 @@ def has_permission(user, permission_name):
 
     role = get_user_role(user)
 
-    if permission_name in role.permission_list():
+    if role and permission_name in role.permission_list():
         try:
             permission = UserPermission.objects.get(user=user, 
                 permission_name=permission_name)

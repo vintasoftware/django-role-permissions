@@ -135,6 +135,11 @@ class HasPermissionTests(TestCase):
 
         self.assertFalse(has_permission(user, 'not_a_permission'))
 
+    def test_user_with_no_role(self):
+        user = mommy.make(get_user_model())
+
+        self.assertFalse(has_permission(user, 'permission1'))
+
 
 class HasObjectPermissionTests(TestCase):
 
