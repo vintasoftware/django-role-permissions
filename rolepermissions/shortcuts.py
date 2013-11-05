@@ -66,8 +66,4 @@ def revoke_permission(user, permission_name):
 
 
 def retrieve_role(role_name):
-    role = RolesManager.retrieve_role(role_name)
-    if role is None:
-        raise RoleDoesNotExist
-
-    return role
+    return RolesManager.retrieve_role(role_name)
