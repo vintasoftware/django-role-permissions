@@ -202,7 +202,7 @@ class RetrieveRole(TestCase):
         self.assertEquals(retrieve_role('new_name'), Role3)
 
     def test_retrieve_unknowun_role(self):
-        with self.assertRaises(RoleDoesNotExist):
-            retrieve_role('unknowun_role')
+        role = retrieve_role('unknowun_role')
+        self.assertIsNone(role)
 
 
