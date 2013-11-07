@@ -10,7 +10,7 @@ from rolepermissions.models import UserPermission
 
 
 def has_role(user, roles):
-    if user.is_superuser:
+    if user and user.is_superuser:
         return True
 
     if not isinstance(roles, list):
@@ -35,7 +35,7 @@ def has_role(user, roles):
 
 
 def has_permission(user, permission_name):
-    if user.is_superuser:
+    if user and user.is_superuser:
         return True
 
     role = get_user_role(user)

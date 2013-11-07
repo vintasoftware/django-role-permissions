@@ -73,6 +73,9 @@ class HasRoleTests(TestCase):
 
         self.assertFalse(has_role(user, 'not_a_role'))
 
+    def test_none_user_param(self):
+        self.assertFalse(has_role(None, 'role1'))
+
 
 class HasPermissionTests(TestCase):
     def setUp(self):
@@ -139,6 +142,9 @@ class HasPermissionTests(TestCase):
         user = mommy.make(get_user_model())
 
         self.assertFalse(has_permission(user, 'permission1'))
+
+    def test_none_user_param(self):
+        self.assertFalse(has_permission(None, 'role1'))
 
 
 class HasObjectPermissionTests(TestCase):
