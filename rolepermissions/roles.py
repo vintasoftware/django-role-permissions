@@ -20,24 +20,29 @@ def camelToSnake(s):
     return _underscorer2.sub(r'\1_\2', subbed).lower()
 
 
+class RolesClassRegister(type):
+    def __init__(cls, name, bases, nmspc):
+        super(RolesClassRegister, cls).__init__(name, bases, nmspc)
+        if not hasattr(cls, '_roles'):
+            cls._roles = {}
+        if not cls in bases:
+            cls._roles[cls.get_name()] = cls
+
+    def __iter__(cls):
+        return iter(cls._roles)
+
+
 class RolesManager(object):
-    _roles = {}
-
-    @classmethod
-    def register_role(cls, role):
-        cls._roles[role().get_name()] = role
-
-    @classmethod
-    def get_roles(cls):
-        return cls._roles
 
     @classmethod
     def retrieve_role(cls, role_name):
-        if role_name in cls._roles:
-            return cls._roles[role_name]
+        if role_name in AbstractUserRole._roles:
+            return AbstractUserRole._roles[role_name]
 
 
 class AbstractUserRole(object):
+
+    __metaclass__ = RolesClassRegister
 
     @classmethod
     def get_name(cls):

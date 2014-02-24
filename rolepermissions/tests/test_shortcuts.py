@@ -16,20 +16,20 @@ from rolepermissions.verifications import has_permission
 
 
 
-class Role1(AbstractUserRole):
+class ShoRole1(AbstractUserRole):
     available_permissions = {
         'permission1': True,
         'permission2': True,
     }
 
-class Role2(AbstractUserRole):
+class ShoRole2(AbstractUserRole):
     available_permissions = {
         'permission3': True,
         'permission4': False,
     }
 
-class Role3(AbstractUserRole):
-    role_name = 'new_name'
+class ShoRole3(AbstractUserRole):
+    role_name = 'sho_new_name'
     available_permissions = {
         'permission5': False,
         'permission6': False,
@@ -39,26 +39,22 @@ class Role3(AbstractUserRole):
 class GetUserRoleTests(TestCase):
 
     def setUp(self):
-        RolesManager.register_role(Role1)
-        RolesManager.register_role(Role2)
-        RolesManager.register_role(Role3)
-
         self.user = mommy.make(get_user_model())
 
     def test_get_user_role(self):
         user = self.user
 
-        user_role = Role1.assign_role_to_user(user)
+        user_role = ShoRole1.assign_role_to_user(user)
 
-        self.assertEquals(get_user_role(user), Role1)
+        self.assertEquals(get_user_role(user), ShoRole1)
 
     def test_get_user_role_after_role_change(self):
         user = self.user
 
-        user_role = Role1.assign_role_to_user(user)
-        user_role = Role3.assign_role_to_user(user)
+        user_role = ShoRole1.assign_role_to_user(user)
+        user_role = ShoRole3.assign_role_to_user(user)
 
-        self.assertEquals(get_user_role(user), Role3)
+        self.assertEquals(get_user_role(user), ShoRole3)
 
     def test_user_without_role(self):
         user = self.user
@@ -72,12 +68,8 @@ class GetUserRoleTests(TestCase):
 class GetUserPermissionsTests(TestCase):
 
     def setUp(self):
-        RolesManager.register_role(Role1)
-        RolesManager.register_role(Role2)
-        RolesManager.register_role(Role3)
-
         self.user = mommy.make(get_user_model())
-        self.user_role = Role2.assign_role_to_user(self.user)
+        self.user_role = ShoRole2.assign_role_to_user(self.user)
 
     def test_get_user_permissinons(self):
         user = self.user
@@ -97,7 +89,6 @@ class GetUserPermissionsTests(TestCase):
             available_permissions = {
                 'the_permission': True,
             }
-        RolesManager.register_role(Role4)
 
         Role4.assign_role_to_user(user)
 
@@ -129,12 +120,8 @@ class GetUserPermissionsTests(TestCase):
 class GrantPermissionTests(TestCase):
 
     def setUp(self):
-        RolesManager.register_role(Role1)
-        RolesManager.register_role(Role2)
-        RolesManager.register_role(Role3)
-
         self.user = mommy.make(get_user_model())
-        self.user_role = Role2.assign_role_to_user(self.user)
+        self.user_role = ShoRole2.assign_role_to_user(self.user)
 
     def test_grant_permission(self):
         user = self.user
@@ -158,12 +145,8 @@ class GrantPermissionTests(TestCase):
 class RevokePermissionTests(TestCase):
 
     def setUp(self):
-        RolesManager.register_role(Role1)
-        RolesManager.register_role(Role2)
-        RolesManager.register_role(Role3)
-
         self.user = mommy.make(get_user_model())
-        self.user_role = Role2.assign_role_to_user(self.user)
+        self.user_role = ShoRole2.assign_role_to_user(self.user)
 
     def test_revoke_permission(self):
         user = self.user
@@ -188,18 +171,16 @@ class RevokePermissionTests(TestCase):
 class RetrieveRole(TestCase):
 
     def setUp(self):
-        RolesManager.register_role(Role1)
-        RolesManager.register_role(Role2)
-        RolesManager.register_role(Role3)
+        pass
 
     def test_retrive_role1(self):
-        self.assertEquals(retrieve_role('role1'), Role1)
+        self.assertEquals(retrieve_role('sho_role1'), ShoRole1)
 
     def test_retrive_role2(self):
-        self.assertEquals(retrieve_role('role2'), Role2)
+        self.assertEquals(retrieve_role('sho_role2'), ShoRole2)
 
     def test_retrive_role3(self):
-        self.assertEquals(retrieve_role('new_name'), Role3)
+        self.assertEquals(retrieve_role('sho_new_name'), ShoRole3)
 
     def test_retrieve_unknowun_role(self):
         role = retrieve_role('unknowun_role')

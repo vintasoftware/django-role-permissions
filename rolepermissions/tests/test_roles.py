@@ -7,19 +7,19 @@ from model_mommy import mommy
 from rolepermissions.roles import RolesManager, AbstractUserRole
 from rolepermissions.models import UserPermission
 
-class Role1(AbstractUserRole):
+class RolRole1(AbstractUserRole):
     available_permissions = {
         'permission1': True,
         'permission2': True,
     }
 
-class Role2(AbstractUserRole):
+class RolRole2(AbstractUserRole):
     available_permissions = {
         'permission3': True,
         'permission4': False,
     }
 
-class Role3(AbstractUserRole):
+class RolRole3(AbstractUserRole):
     role_name = 'new_name'
     available_permissions = {
         'permission5': False,
@@ -33,14 +33,14 @@ class AbstractUserRoleTests(TestCase):
         pass
 
     def test_get_name(self):
-        self.assertEquals(Role1.get_name(), 'role1')
-        self.assertEquals(Role2.get_name(), 'role2')
-        self.assertEquals(Role3.get_name(), 'new_name')
+        self.assertEquals(RolRole1.get_name(), 'rol_role1')
+        self.assertEquals(RolRole2.get_name(), 'rol_role2')
+        self.assertEquals(RolRole3.get_name(), 'new_name')
 
     def test_assign_Role1_default_permissions(self):
         user = mommy.make(get_user_model())
 
-        Role1.assign_default_permissions(user)
+        RolRole1.assign_default_permissions(user)
         permissions = UserPermission.objects.filter(user=user)
 
         permission_hash = { p.permission_name: p.is_granted for p in permissions }
@@ -54,7 +54,7 @@ class AbstractUserRoleTests(TestCase):
     def test_assign_Role2_default_permissions(self):
         user = mommy.make(get_user_model())
 
-        Role2.assign_default_permissions(user)
+        RolRole2.assign_default_permissions(user)
         permissions = UserPermission.objects.filter(user=user)
 
         permission_hash = { p.permission_name: p.is_granted for p in permissions }
@@ -68,7 +68,7 @@ class AbstractUserRoleTests(TestCase):
     def test_assign_Role3_default_permissions(self):
         user = mommy.make(get_user_model())
 
-        Role3.assign_default_permissions(user)
+        RolRole3.assign_default_permissions(user)
         permissions = UserPermission.objects.filter(user=user)
 
         permission_hash = { p.permission_name: p.is_granted for p in permissions }
@@ -82,32 +82,32 @@ class AbstractUserRoleTests(TestCase):
     def test_assign_role_to_user(self):
         user = mommy.make(get_user_model())
 
-        user_role = Role1.assign_role_to_user(user)
+        user_role = RolRole1.assign_role_to_user(user)
 
-        self.assertEquals(user_role.role_name, 'role1')
+        self.assertEquals(user_role.role_name, 'rol_role1')
 
     def test_instanciate_role(self):
         user = mommy.make(get_user_model())
 
-        user_role = Role1.assign_role_to_user(user)
+        user_role = RolRole1.assign_role_to_user(user)
 
         self.assertIsNotNone(user_role.pk)
 
     def test_change_user_role(self):
         user = mommy.make(get_user_model())
 
-        user_role = Role1.assign_role_to_user(user)
+        user_role = RolRole1.assign_role_to_user(user)
 
-        self.assertEquals(user_role.role_name, 'role1')
+        self.assertEquals(user_role.role_name, 'rol_role1')
 
-        user_role = Role2.assign_role_to_user(user)
+        user_role = RolRole2.assign_role_to_user(user)
 
-        self.assertEquals(user_role.role_name, 'role2')
+        self.assertEquals(user_role.role_name, 'rol_role2')
 
     def test_delete_old_permissions_on_role_change(self):
         user = mommy.make(get_user_model())
 
-        Role1().assign_role_to_user(user)
+        RolRole1().assign_role_to_user(user)
         
         permissions = UserPermission.objects.filter(user=user)
 
@@ -117,7 +117,7 @@ class AbstractUserRoleTests(TestCase):
         self.assertIn('permission2', permission_names)
         self.assertEquals(len(permissions), 2)
 
-        Role2.assign_role_to_user(user)
+        RolRole2.assign_role_to_user(user)
 
         permissions = UserPermission.objects.filter(user=user)
 
@@ -129,35 +129,18 @@ class AbstractUserRoleTests(TestCase):
 
 
     def test_permission_list(self):
-        self.assertIn('permission1', Role1.permission_list())
-        self.assertIn('permission2', Role1.permission_list())
+        self.assertIn('permission1', RolRole1.permission_list())
+        self.assertIn('permission2', RolRole1.permission_list())
 
-        self.assertIn('permission3', Role2.permission_list())
-        self.assertIn('permission4', Role2.permission_list())
+        self.assertIn('permission3', RolRole2.permission_list())
+        self.assertIn('permission4', RolRole2.permission_list())
 
 
 class RolesManagerTests(TestCase):
 
     def setUp(self):
-        RolesManager._roles = {}
-
-    def test_registering_role(self):
-        self.assertNotIn('role1', RolesManager._roles)
-
-        RolesManager.register_role(Role1)
-
-        self.assertIn('role1', RolesManager._roles)
-
-    def test_get_roles(self):
-        RolesManager.register_role(Role1)
-        RolesManager.register_role(Role2)
-
-        self.assertTrue(isinstance(RolesManager.get_roles(), dict))
-        self.assertEquals(len(RolesManager.get_roles()), 2)
+        pass
 
     def test_retrieve_role(self):
-        RolesManager.register_role(Role1)
-        RolesManager.register_role(Role2)
-
-        self.assertEquals(RolesManager.retrieve_role('role1'), Role1)
-        self.assertEquals(RolesManager.retrieve_role('role2'), Role2)
+        self.assertEquals(RolesManager.retrieve_role('rol_role1'), RolRole1)
+        self.assertEquals(RolesManager.retrieve_role('rol_role2'), RolRole2)

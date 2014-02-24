@@ -12,14 +12,14 @@ from rolepermissions.roles import RolesManager, AbstractUserRole
 from rolepermissions.mixins import HasRoleMixin, HasPermissionsMixin
 
 
-class Role1(AbstractUserRole):
+class MixRole1(AbstractUserRole):
     available_permissions = {
         'permission1': True,
         'permission2': True,
     }
 
 
-class Role2(AbstractUserRole):
+class MixRole2(AbstractUserRole):
     available_permissions = {
         'permission3': True,
         'permission4': False,
@@ -27,13 +27,13 @@ class Role2(AbstractUserRole):
 
 
 class HasRoleDetailView(HasRoleMixin, DetailView):
-    allowed_roles = ['role1']
+    allowed_roles = ['mix_role1']
 
     def get_object(self):
         return True
 
 class MultipleHasRoleDetailView(HasRoleMixin, DetailView):
-    allowed_roles = ['role1', Role2]
+    allowed_roles = ['mix_role1', MixRole2]
 
     def get_object(self):
         return True
@@ -41,9 +41,6 @@ class MultipleHasRoleDetailView(HasRoleMixin, DetailView):
 class HasRoleDecoratorTests(TestCase):
 
     def setUp(self):
-        RolesManager.register_role(Role1)
-        RolesManager.register_role(Role2)
-
         self.user = mommy.make(get_user_model())
 
         self.factory = RequestFactory()
@@ -56,7 +53,7 @@ class HasRoleDecoratorTests(TestCase):
         user = self.user
         request = self.request
 
-        Role1.assign_role_to_user(user)
+        MixRole1.assign_role_to_user(user)
 
         response = HasRoleDetailView.as_view()(request)
 
@@ -66,7 +63,7 @@ class HasRoleDecoratorTests(TestCase):
         user = self.user
         request = self.request
 
-        Role2.assign_role_to_user(user)
+        MixRole2.assign_role_to_user(user)
 
         with self.assertRaises(PermissionDenied):
             response = HasRoleDetailView.as_view()(request)
@@ -75,13 +72,13 @@ class HasRoleDecoratorTests(TestCase):
         user = self.user
         request = self.request
 
-        Role2.assign_role_to_user(user)
+        MixRole2.assign_role_to_user(user)
 
         response = MultipleHasRoleDetailView.as_view()(request)
 
         self.assertEquals(response.status_code, 200)
 
-        Role1.assign_role_to_user(user)
+        MixRole1.assign_role_to_user(user)
 
         response = MultipleHasRoleDetailView.as_view()(request)
 
@@ -101,9 +98,6 @@ class HasPermissionDetailView(HasPermissionsMixin, DetailView):
 class HasPermissionDecoratorTests(TestCase):
 
     def setUp(self):
-        RolesManager.register_role(Role1)
-        RolesManager.register_role(Role2)
-
         self.user = mommy.make(get_user_model())
 
         self.factory = RequestFactory()
@@ -116,7 +110,7 @@ class HasPermissionDecoratorTests(TestCase):
         user = self.user
         request = self.request
 
-        Role1.assign_role_to_user(user)
+        MixRole1.assign_role_to_user(user)
 
         response = HasPermissionDetailView.as_view()(request)
 
@@ -126,7 +120,7 @@ class HasPermissionDecoratorTests(TestCase):
         user = self.user
         request = self.request
 
-        Role2.assign_role_to_user(user)
+        MixRole2.assign_role_to_user(user)
 
         with self.assertRaises(PermissionDenied):
             response = HasPermissionDetailView.as_view()(request)
