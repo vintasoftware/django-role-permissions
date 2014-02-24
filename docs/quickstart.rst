@@ -2,16 +2,10 @@
 Quick Start
 ===========
 
-Install
-=======
-
 Install from PyPI with ``pip``::
 
     pip install django-role-permissions
 
-
-Configure
-=========
 
 Add ```rolepermissions``` to you ```INSTALLED_APPS```
 
@@ -40,4 +34,8 @@ Create a ``roles.py`` file in the same folder as your ``settings.py`` and two ro
             'eddit_pacient_file': True,
         }
 
-and add 
+Add a reference to your roles module to your settings:
+
+.. code-block:: python
+
+    ROLEPERMISSIONS_MODULE = 'myapplication.roles'
