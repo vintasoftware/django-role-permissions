@@ -24,14 +24,6 @@ Add ```rolepermissions``` to you ```INSTALLED_APPS```
     )
 
 
-Add the register to your ```urls.py```
-
-.. code-block:: python
-
-    from rolepermissions.loader import load_roles_and_permissions
-    load_roles_and_permissions()
-
-
 Create a ``roles.py`` file in the same folder as your ``settings.py`` and two roles:
 
 .. code-block:: python
