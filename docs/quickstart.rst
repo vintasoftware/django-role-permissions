@@ -2,16 +2,16 @@
 Quick Start
 ===========
 
-Installation
-============
+Install
+=======
 
 Install from PyPI with ``pip``::
 
     pip install django-role-permissions
 
 
-Configuration
-=============
+Configure
+=========
 
 Add ```rolepermissions``` to you ```INSTALLED_APPS```
 

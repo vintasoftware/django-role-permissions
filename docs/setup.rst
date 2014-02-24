@@ -23,10 +23,3 @@ Add ```rolepermissions``` to you ```INSTALLED_APPS```
         ...
     )
 
-
-Add the register to your ```urls.py```
-
-.. code-block:: python
-
-    from rolepermissions.loader import load_roles_and_permissions
-    load_roles_and_permissions()
