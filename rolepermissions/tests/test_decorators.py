@@ -2,13 +2,14 @@
 from django.views.generic import DetailView
 from django.utils.decorators import method_decorator
 from django.test import TestCase
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model
 from django.test.client import RequestFactory
 from django.core.exceptions import PermissionDenied
+from django.http.response import HttpResponse
 
 from model_mommy import mommy
 
-from rolepermissions.roles import RolesManager, AbstractUserRole
+from rolepermissions.roles import AbstractUserRole
 from rolepermissions.decorators import has_role_decorator, has_permission_decorator
 
 
@@ -35,6 +36,10 @@ class HasRoleDetailView(DetailView):
     def get_object(self):
         return True
 
+    def render_to_response(self, context, **response_kwargs):
+        return HttpResponse("Test")
+
+
 class MultipleHasRoleDetailView(DetailView):
 
     @method_decorator(has_role_decorator(['dec_role1', DecRole2]))
@@ -43,6 +48,10 @@ class MultipleHasRoleDetailView(DetailView):
 
     def get_object(self):
         return True
+
+    def render_to_response(self, context, **response_kwargs):
+        return HttpResponse("Test")
+
 
 class HasRoleDecoratorTests(TestCase):
 
@@ -99,6 +108,9 @@ class HasPermissionDetailView(DetailView):
 
     def get_object(self):
         return True
+
+    def render_to_response(self, context, **response_kwargs):
+        return HttpResponse("Test")
 
 
 class HasPermissionDecoratorTests(TestCase):

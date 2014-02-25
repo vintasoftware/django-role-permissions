@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model, login
 from django.test.client import RequestFactory
 from django.core.exceptions import PermissionDenied
+from django.http.response import HttpResponse
 
 from model_mommy import mommy
 
@@ -32,11 +33,19 @@ class HasRoleDetailView(HasRoleMixin, DetailView):
     def get_object(self):
         return True
 
+    def render_to_response(self, context, **response_kwargs):
+        return HttpResponse("Test")
+
+
 class MultipleHasRoleDetailView(HasRoleMixin, DetailView):
     allowed_roles = ['mix_role1', MixRole2]
 
     def get_object(self):
         return True
+
+    def render_to_response(self, context, **response_kwargs):
+        return HttpResponse("Test")
+
 
 class HasRoleDecoratorTests(TestCase):
 
@@ -93,6 +102,9 @@ class HasPermissionDetailView(HasPermissionsMixin, DetailView):
 
     def get_object(self):
         return True
+
+    def render_to_response(self, context, **response_kwargs):
+        return HttpResponse("Test")
 
 
 class HasPermissionDecoratorTests(TestCase):
