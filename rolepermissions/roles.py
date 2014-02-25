@@ -78,6 +78,10 @@ class AbstractUserRole(object):
     def get_default_true_permissions(cls):
         permission_names = [key for (key, default) in cls.available_permissions.items() if default]
 
+        return cls.get_or_create_permissions(permission_names)
+
+    @classmethod
+    def get_or_create_permissions(cls, permission_names):
         user_type = ContentType.objects.get_for_model(get_user_model())
         permissions = list(Permission.objects.filter(content_type=user_type, codename__in=permission_names).all())
 
