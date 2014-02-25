@@ -1,10 +1,11 @@
 
 import inspect
 import re
-
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-
-from rolepermissions.models import UserRole, UserPermission
+from django.contrib.auth.models import Group, Permission
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth import get_user_model
 
 
 def camelToSnake(s):
@@ -53,36 +54,41 @@ class AbstractUserRole(object):
 
     @classmethod
     def assign_role_to_user(cls, user):
-        try:
-            user_role = UserRole.objects.get(user=user)
-        except ObjectDoesNotExist:
-            user_role = None
+        old_groups = user.groups.all()
+        
+        if old_groups:
+            old_group = old_groups[0]
+            role = RolesManager.retrieve_role(old_group.name)
+            permissions_to_remove = Permission.objects.filter(codename__in=role.permission_list()).all()
+            user.user_permissions.remove(*permissions_to_remove)
+            user.groups.clear()
 
-        UserPermission.objects.filter(user=user).delete()
+        group, created = Group.objects.get_or_create(name=cls.get_name())
+        user.groups.add(group)
+        permissions_to_add = cls.get_default_true_permissions()
+        user.user_permissions.add(*permissions_to_add)
 
-        if not user_role:
-            user_role = UserRole(user=user)
-
-        user_role.role_name = cls.get_name()
-        user_role.save()
-
-        user.role = user_role
-
-        cls.assign_default_permissions(user)
-
-        return user_role
-
-    @classmethod
-    def assign_default_permissions(cls, user):
-        role_permissions = cls.available_permissions
-        for permission in role_permissions:
-            UserPermission.objects.get_or_create(
-                user=user, permission_name=permission,
-                is_granted=role_permissions[permission])
+        return group
 
     @classmethod
     def permission_list(cls):
-        return cls.available_permissions.keys()
+        return [key for (key, value) in cls.available_permissions.items()]
+
+    @classmethod
+    def get_default_true_permissions(cls):
+        permission_names = [key for (key, default) in cls.available_permissions.items() if default]
+
+        user_type = ContentType.objects.get_for_model(get_user_model())
+        permissions = list(Permission.objects.filter(content_type=user_type, codename__in=permission_names).all())
+
+        if len(permissions) != len(permission_names):
+            for permission_name in permission_names:
+                permission, created = Permission.objects.get_or_create(content_type=user_type, codename=permission_name)
+                if created:
+                    permissions.append(permission)
+
+        return permissions
+
 
     @classmethod
     def get_default(cls, permission_name):
