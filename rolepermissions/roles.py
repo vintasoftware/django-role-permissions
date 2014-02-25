@@ -1,24 +1,9 @@
 
-import inspect
-import re
-from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 
-
-def camelToSnake(s):
-    """ 
-    https://gist.github.com/jaytaylor/3660565
-    Is it ironic that this function is written in camel case, yet it
-    converts to snake case? hmm..
-    """
-    _underscorer1 = re.compile(r'(.)([A-Z][a-z]+)')
-    _underscorer2 = re.compile('([a-z0-9])([A-Z])')
-
-    subbed = _underscorer1.sub(r'\1_\2', s)
-    return _underscorer2.sub(r'\1_\2', subbed).lower()
+from rolepermissions.utils import camelToSnake
 
 
 class RolesClassRegister(type):
