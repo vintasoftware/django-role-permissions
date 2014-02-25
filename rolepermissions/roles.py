@@ -42,7 +42,7 @@ class AbstractUserRole(object):
         old_groups = user.groups.all()
         
         if old_groups:
-            old_group = old_groups[0]
+            old_group = old_groups[0] # assumes a user has only one group
             role = RolesManager.retrieve_role(old_group.name)
             permissions_to_remove = Permission.objects.filter(codename__in=role.permission_list()).all()
             user.user_permissions.remove(*permissions_to_remove)
