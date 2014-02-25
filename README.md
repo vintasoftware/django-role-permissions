@@ -9,6 +9,10 @@ Documentation is available at:
 
 [http://django-role-permissions.readthedocs.org/](http://django-role-permissions.readthedocs.org/)
 
+## Running tests
+
+This packages uses tox to run tests on multiple evironments, please run ```python setup.py test``` before submiting a pull request.
+
 ## LICENSE
 
 The MIT License (MIT)

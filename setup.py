@@ -16,7 +16,6 @@ author_email = 'filipeximenes@gmail.com'
 license = 'MIT'
 install_requires = [
     'Django >= 1.5.4',
-    'model-mommy >= 1.1',
     'django-discover-runner == 1.0',
 ]
 
@@ -73,5 +72,6 @@ setup(
     author_email=author_email,
     packages=get_packages(package),
     package_data=get_package_data(package),
-    install_requires=install_requires
+    install_requires=install_requires,
+    test_suite='tox'
 )
