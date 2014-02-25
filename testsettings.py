@@ -14,12 +14,15 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
 
-    'discover_runner',
-    'south',
-
     'rolepermissions',
 )
 
-TEST_RUNNER = 'discover_runner.DiscoverRunner'
+import django
+from distutils.version import LooseVersion
+
+if LooseVersion(django.get_version()) >= LooseVersion('1.5') \
+    and LooseVersion(django.get_version()) < LooseVersion('1.6'):
+    INSTALLED_APPS += ('discover_runner',)
+    TEST_RUNNER = 'discover_runner.DiscoverRunner'
 
 SECRET_KEY = 'abcde12345'
