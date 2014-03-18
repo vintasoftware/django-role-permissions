@@ -43,10 +43,10 @@ class AbstractUserRoleTests(TestCase):
         RolRole1.assign_role_to_user(user)
         permissions = user.user_permissions.all()
 
-        permission_list = [perm.codename for perm in permissions]
+        permission_names_list = [perm.codename for perm in permissions]
 
-        self.assertIn('permission1', permission_list)
-        self.assertIn('permission2', permission_list)
+        self.assertIn('permission1', permission_names_list)
+        self.assertIn('permission2', permission_names_list)
         self.assertEquals(len(permissions), 2)
 
     def test_assign_Role2_default_permissions(self):
@@ -55,10 +55,10 @@ class AbstractUserRoleTests(TestCase):
         RolRole2.assign_role_to_user(user)
         permissions = user.user_permissions.all()
 
-        permission_list = [perm.codename for perm in permissions]
+        permission_names_list = [perm.codename for perm in permissions]
 
-        self.assertIn('permission3', permission_list)
-        self.assertNotIn('permission4', permission_list)
+        self.assertIn('permission3', permission_names_list)
+        self.assertNotIn('permission4', permission_names_list)
         self.assertEquals(len(permissions), 1)
 
     def test_assign_Role3_default_permissions(self):
@@ -67,10 +67,10 @@ class AbstractUserRoleTests(TestCase):
         RolRole3.assign_role_to_user(user)
         permissions = user.user_permissions.all()
 
-        permission_list = [perm.codename for perm in permissions]
+        permission_names_list = [perm.codename for perm in permissions]
 
-        self.assertNotIn('permission5', permission_list)
-        self.assertNotIn('permission6', permission_list)
+        self.assertNotIn('permission5', permission_names_list)
+        self.assertNotIn('permission6', permission_names_list)
         self.assertEquals(len(permissions), 0)
 
     def test_assign_role_to_user(self):
@@ -124,12 +124,12 @@ class AbstractUserRoleTests(TestCase):
         self.assertEquals(len(permissions), 1)
 
 
-    def test_permission_list(self):
-        self.assertIn('permission1', RolRole1.permission_list())
-        self.assertIn('permission2', RolRole1.permission_list())
+    def test_permission_names_list(self):
+        self.assertIn('permission1', RolRole1.permission_names_list())
+        self.assertIn('permission2', RolRole1.permission_names_list())
 
-        self.assertIn('permission3', RolRole2.permission_list())
-        self.assertIn('permission4', RolRole2.permission_list())
+        self.assertIn('permission3', RolRole2.permission_names_list())
+        self.assertIn('permission4', RolRole2.permission_names_list())
 
 
 class RolesManagerTests(TestCase):

@@ -25,6 +25,10 @@ class RolesManager(object):
         if role_name in AbstractUserRole._roles:
             return AbstractUserRole._roles[role_name]
 
+    @classmethod
+    def get_roles_names(cls):
+        return [r for r, c in AbstractUserRole._roles.iteritems()]
+
 
 class AbstractUserRole(object):
 
@@ -44,7 +48,7 @@ class AbstractUserRole(object):
         if old_groups:
             old_group = old_groups[0] # assumes a user has only one group
             role = RolesManager.retrieve_role(old_group.name)
-            permissions_to_remove = Permission.objects.filter(codename__in=role.permission_list()).all()
+            permissions_to_remove = Permission.objects.filter(codename__in=role.permission_names_list()).all()
             user.user_permissions.remove(*permissions_to_remove)
             user.groups.clear()
 
@@ -56,7 +60,7 @@ class AbstractUserRole(object):
         return group
 
     @classmethod
-    def permission_list(cls):
+    def permission_names_list(cls):
         return [key for (key, value) in cls.available_permissions.items()]
 
     @classmethod
@@ -67,12 +71,12 @@ class AbstractUserRole(object):
 
     @classmethod
     def get_or_create_permissions(cls, permission_names):
-        user_type = ContentType.objects.get_for_model(get_user_model())
-        permissions = list(Permission.objects.filter(content_type=user_type, codename__in=permission_names).all())
+        user_ct = ContentType.objects.get_for_model(get_user_model())
+        permissions = list(Permission.objects.filter(content_type=user_ct, codename__in=permission_names).all())
 
         if len(permissions) != len(permission_names):
             for permission_name in permission_names:
-                permission, created = Permission.objects.get_or_create(content_type=user_type, codename=permission_name)
+                permission, created = Permission.objects.get_or_create(content_type=user_ct, codename=permission_name)
                 if created:
                     permissions.append(permission)
 

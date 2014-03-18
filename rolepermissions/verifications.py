@@ -2,11 +2,13 @@
 import inspect
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Permission
+from django.contrib.auth import get_user_model
 
 from rolepermissions.roles import RolesManager
 from rolepermissions.permissions import PermissionsManager
-from rolepermissions.shortcuts import get_user_role
-from rolepermissions.models import UserPermission
+from rolepermissions.shortcuts import get_user_role, get_permission
 
 
 def has_role(user, roles):
@@ -40,18 +42,12 @@ def has_permission(user, permission_name):
 
     role = get_user_role(user)
 
-    if role and permission_name in role.permission_list():
-        try:
-            permission = UserPermission.objects.get(user=user, 
-                permission_name=permission_name)
-            return permission.is_granted
-        except ObjectDoesNotExist:
-            permission = UserPermission(user=user, 
-                permission_name=permission_name, 
-                is_granted=role.get_default(permission_name))
-            permission.save()
-            return permission.is_granted
-            
+    if role and permission_name in role.permission_names_list():
+        permission = get_permission(permission_name)
+
+        if permission in user.user_permissions.all():
+            return True
+
     return False
 
 

@@ -7,7 +7,6 @@ from model_mommy import mommy
 from rolepermissions.roles import RolesManager, AbstractUserRole
 from rolepermissions.verifications import has_role, has_permission, has_object_permission
 from rolepermissions.permissions import register_object_checker
-from rolepermissions.models import UserPermission
 
 
 class VerRole1(AbstractUserRole):
@@ -90,39 +89,6 @@ class HasPermissionTests(TestCase):
         VerRole1.assign_role_to_user(user)
 
         self.assertFalse(has_permission(user, 'permission3'))
-
-    def test_creates_permission_when_not_existent(self):
-        user = self.user
-
-        class VerRole4(AbstractUserRole):
-            available_permissions = {
-                'the_permission': True
-            }
-
-        VerRole4.assign_role_to_user(user)
-
-        VerRole4.available_permissions = { 'different_one': True }
-
-        self.assertTrue(has_permission(user, 'different_one'))
-
-        permission = UserPermission.objects.get(user=user, permission_name='different_one')
-
-        self.assertTrue(permission.is_granted)
-
-    def test_does_not_creates_if_permission_does_not_exists_in_role(self):
-        user = self.user
-
-        VerRole1.assign_role_to_user(user)
-
-        self.assertFalse(has_permission(user, 'different_permission'))
-
-        try:
-            permission = UserPermission.objects.get(user=user, 
-                permission_name='different_permission')
-        except:
-            permission = None
-
-        self.assertIsNone(permission)
 
     def test_not_existent_permission(self):
         user = self.user

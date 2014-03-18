@@ -8,10 +8,9 @@ from model_mommy import mommy
 from rolepermissions.exceptions import RoleDoesNotExist
 from rolepermissions.roles import RolesManager, AbstractUserRole
 from rolepermissions.shortcuts import (
-    get_user_role, get_user_permissions, grant_permission,
+    get_user_role, grant_permission,
     revoke_permission, retrieve_role,
 )
-from rolepermissions.models import UserPermission
 from rolepermissions.verifications import has_permission
 
 
@@ -63,58 +62,6 @@ class GetUserRoleTests(TestCase):
 
     def tearDown(self):
         RolesManager._roles = {}
-
-
-class GetUserPermissionsTests(TestCase):
-
-    def setUp(self):
-        self.user = mommy.make(get_user_model())
-        self.user_role = ShoRole2.assign_role_to_user(self.user)
-
-    def test_get_user_permissinons(self):
-        user = self.user
-
-        permissions = get_user_permissions(user)
-
-        self.assertIn('permission3', permissions)
-        self.assertIn('permission4', permissions)
-        self.assertTrue(permissions['permission3'])
-        self.assertFalse(permissions['permission4'])
-        self.assertEquals(len(permissions), 2)
-
-    def test_creates_when_does_not_exists(self):
-        user = self.user
-
-        class Role4(AbstractUserRole):
-            available_permissions = {
-                'the_permission': True,
-            }
-
-        Role4.assign_role_to_user(user)
-
-        Role4.available_permissions = {
-            'the_permission': True,
-            'new_permission': True,
-        }
-
-        permissions = get_user_permissions(user)
-
-        self.assertIn('the_permission', permissions)
-        self.assertIn('new_permission', permissions)
-        self.assertTrue(permissions['the_permission'])
-        self.assertTrue(permissions['new_permission'])
-        self.assertEquals(len(permissions), 2)
-
-        new_permission = UserPermission.objects.get(user=user, permission_name='new_permission')
-
-        self.assertTrue(new_permission.is_granted)
-
-    def test_get_permission_for_user_with_no_role(self):
-        user = mommy.make(get_user_model())
-
-        permissions = get_user_permissions(user)
-
-        self.assertEquals(permissions, {})
 
 
 class GrantPermissionTests(TestCase):

@@ -1,18 +1,34 @@
 
 from django.http import Http404
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Permission
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 
 from rolepermissions.exceptions import RoleDoesNotExist
 from rolepermissions.roles import RolesManager
-from rolepermissions.models import UserPermission
+
+
+def get_permission(permission_name):
+    user_ct = ContentType.objects.get_for_model(get_user_model())
+    permission, created = Permission.objects.get_or_create(content_type=user_ct, 
+        codename=permission_name)
+
+    return permission
 
 
 def get_user_role(user):
-    if hasattr(user, 'role'):
-        return RolesManager.retrieve_role(user.role.role_name)
+    if user:
+        roles = user.groups.filter(name__in=RolesManager.get_roles_names())
+        if roles:
+            return RolesManager.retrieve_role(roles[0].name)
+
     return None
 
 
-def get_user_permissions(user):
+def available_perm_status(user):
+    # user_ct = ContentType.objects.get_for_model(get_user_model())
+    
     role = get_user_role(user)
 
     permissions = UserPermission.objects.filter(user=user)
@@ -20,7 +36,7 @@ def get_user_permissions(user):
 
     user_permissions = []
     if role:
-        for permission_name in role.permission_list():
+        for permission_name in role.permission_names_list():
             if permission_name in permissions:
                 permission = permissions[permission_name]
             else:
@@ -36,30 +52,22 @@ def get_user_permissions(user):
 
 
 def grant_permission(user, permission_name):
-    user_permissions = get_user_permissions(user)
+    role = get_user_role(user)
 
-    if permission_name in user_permissions:
-        permission = UserPermission.objects.get(user=user, 
-            permission_name=permission_name)
-
-        permission.is_granted = True
-        permission.save()
-
+    if role and permission_name in role.permission_names_list():
+        permission = get_permission(permission_name)
+        user.user_permissions.add(permission)
         return True
 
     return False
 
 
 def revoke_permission(user, permission_name):
-    user_permissions = get_user_permissions(user)
+    role = get_user_role(user)
 
-    if permission_name in user_permissions:
-        permission = UserPermission.objects.get(user=user, 
-            permission_name=permission_name)
-
-        permission.is_granted = False
-        permission.save()
-
+    if role and permission_name in role.permission_names_list():
+        permission = get_permission(permission_name)
+        user.user_permissions.remove(permission)
         return True
 
     return False
