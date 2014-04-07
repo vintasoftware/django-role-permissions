@@ -61,13 +61,17 @@ class AbstractUserRole(object):
 
     @classmethod
     def permission_names_list(cls):
-        return [key for (key, value) in cls.available_permissions.items()]
+        available_permissions = getattr(cls, 'available_permissions', {})
+        return [key for (key, value) in available_permissions.items()]
 
     @classmethod
     def get_default_true_permissions(cls):
-        permission_names = [key for (key, default) in cls.available_permissions.items() if default]
+        if hasattr(cls, 'available_permissions'):
+            permission_names = [key for (key, default) in cls.available_permissions.items() if default]
 
-        return cls.get_or_create_permissions(permission_names)
+            return cls.get_or_create_permissions(permission_names)
+        else:
+            return []
 
     @classmethod
     def get_or_create_permissions(cls, permission_names):
