@@ -13,7 +13,7 @@ Shortcuts
 
     role = get_user_role(user)
 
-.. function:: get_user_permissions(user)
+.. function:: available_perm_status(user)
     
 Returns a dictionary containg all permissions available to the role of the specified user. 
 Permissions are the keys of the dictionary, and values are ```True``` or ```False``` indicating if the 
@@ -21,9 +21,9 @@ permission is granted or not.
 
 .. code-block:: python
     
-    from rolepermissions.shortcuts import get_user_permissions
+    from rolepermissions.shortcuts import available_perm_status
 
-    permissions = get_user_permissions(user)
+    permissions = available_perm_status(user)
 
     if permissions['create_medical_record']:
         print 'user can create medical record'

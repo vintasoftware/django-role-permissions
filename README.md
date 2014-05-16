@@ -2,6 +2,9 @@
 
 A django app for role based permissions.
 
+*** IMPORTANT ***   
+Version 0.4 has introduced breaking changes. DO *NOT* try to migrate from version 0.3.X (or older), to post 0.4 versions.
+
 ## Documentation
 
 Documentation is available at:
