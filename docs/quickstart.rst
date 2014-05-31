@@ -31,7 +31,7 @@ Create a ``roles.py`` file in the same folder as your ``settings.py`` and two ro
 
     class Nurse(AbstractUserRole):
         available_permissions = {
-            'eddit_pacient_file': True,
+            'edit_pacient_file': True,
         }
 
 Add a reference to your roles module to your settings:
