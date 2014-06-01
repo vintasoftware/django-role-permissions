@@ -26,6 +26,19 @@ def get_user_role(user):
     return None
 
 
+def get_user_permissions(user):
+    role = get_user_role(user)
+    permissions = role.available_permissions
+
+    user_permissions = user.user_permissions.filter(codename__in=permissions.keys()).\
+        values_list('codename', flat=True)
+
+    for permission_name in permissions:
+        permissions[permission_name] = permission_name in user_permissions
+
+    return permissions
+
+
 def available_perm_status(user):
     # user_ct = ContentType.objects.get_for_model(get_user_model())
     
