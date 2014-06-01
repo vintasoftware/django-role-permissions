@@ -8,8 +8,9 @@ from model_mommy import mommy
 from rolepermissions.exceptions import RoleDoesNotExist
 from rolepermissions.roles import RolesManager, AbstractUserRole
 from rolepermissions.shortcuts import (
-    get_user_role, grant_permission,
-    revoke_permission, retrieve_role,
+    get_user_role, get_user_permissions,
+    grant_permission, revoke_permission,
+    retrieve_role,
 )
 from rolepermissions.verifications import has_permission
 
@@ -62,6 +63,31 @@ class GetUserRoleTests(TestCase):
 
     def tearDown(self):
         RolesManager._roles = {}
+
+
+class GetUserPermissionsTests(TestCase):
+
+    def setUp(self):
+        self.user = mommy.make(get_user_model())
+        self.role_class = ShoRole1
+        self.user_role = self.role_class.assign_role_to_user(self.user)
+
+    def test_get_user_permissios(self):
+        user = self.user
+
+        user_permissions = get_user_permissions(user)
+
+        self.assertEquals(user_permissions, self.role_class.available_permissions)
+
+    def test_after_revoke_permission(self):
+        user = self.user
+        role_class = self.role_class
+
+        revoke_permission(user, 'permission1')
+
+        user_permissions = get_user_permissions(user)
+
+        self.assertEquals(user_permissions['permission1'], False)
 
 
 class GrantPermissionTests(TestCase):
