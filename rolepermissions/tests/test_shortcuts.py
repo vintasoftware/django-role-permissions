@@ -89,6 +89,7 @@ class GrantPermissionTests(TestCase):
 
         self.assertFalse(grant_permission(user, 'permission1'))
 
+
 class RevokePermissionTests(TestCase):
 
     def setUp(self):
