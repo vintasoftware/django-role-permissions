@@ -52,7 +52,7 @@ def get_package_data(package):
                           for filename in filenames])
     return {package: filepaths}
 
-
+# python setup.py register
 if sys.argv[-1] == 'publish':
     os.system("python setup.py sdist upload")
     args = {'version': get_version(package)}
