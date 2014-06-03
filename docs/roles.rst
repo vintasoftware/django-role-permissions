@@ -49,6 +49,3 @@ Available Role Permissions
 The field ```available_permissions``` lists what permissions the role can be granted. 
 The boolean referenced on the ```available_permissions``` dictionary is the default value to the 
 refered permission.  
-
-
-New permissions can be added at any time and users will be granted the default permission value until it's explicitly changed.
