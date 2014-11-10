@@ -28,7 +28,7 @@ permission is granted or not.
     if permissions['create_medical_record']:
         print 'user can create medical record'
 
-.. function:: grant_permission(user, permission_name):
+.. function:: grant_permission(user, permission_name)
 
 .. code-block:: python
     
@@ -36,7 +36,7 @@ permission is granted or not.
 
     grant_permission(user, 'create_medical_record')
 
-.. function:: revoke_permission(user, permission_name):
+.. function:: revoke_permission(user, permission_name)
 
 .. code-block:: python
     
@@ -44,7 +44,7 @@ permission is granted or not.
 
     revoke_permission(user, 'create_medical_record')
 
-.. function:: retrieve_role(role_name):
+.. function:: retrieve_role(role_name)
 
 .. code-block:: python
     
