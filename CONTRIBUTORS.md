@@ -1,5 +1,5 @@
-Filipe Ximenes
-Flavio Juvenal
-Felipe Farias
+Filipe Ximenes (filipeximenes)
+Flavio Juvenal (fjsj)
+Felipe Farias (felipefarias)
 Victor Gutemberg (victorgutemberg)
 Sutee Dee (sdee)
