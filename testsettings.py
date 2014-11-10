@@ -26,3 +26,9 @@ if LooseVersion(django.get_version()) >= LooseVersion('1.5') \
     TEST_RUNNER = 'discover_runner.DiscoverRunner'
 
 SECRET_KEY = 'abcde12345'
+
+if LooseVersion(django.get_version()) >= LooseVersion('1.7'):
+    MIDDLEWARE_CLASSES = (
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware'
+    )
