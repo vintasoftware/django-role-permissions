@@ -27,8 +27,6 @@ def get_user_role(user):
 
 
 def available_perm_status(user):
-    # user_ct = ContentType.objects.get_for_model(get_user_model())
-    
     role = get_user_role(user)
 
     permissions = UserPermission.objects.filter(user=user)
