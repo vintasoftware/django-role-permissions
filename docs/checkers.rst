@@ -28,5 +28,4 @@ registered object permission checker functions.
         return False
 
 when requested the object permission checker will receive the role of the user,
-the user and the object being verified and should return ```True``` if the 
-permission is granted.
+the user and the object being verified and should return ```True``` if the permission is granted.
