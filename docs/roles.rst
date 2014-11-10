@@ -20,7 +20,7 @@ Create a ```roles.py``` file anywere inside your django project and reference it
 
     class Nurse(AbstractUserRole):
         available_permissions = {
-            'eddit_pacient_file': True,
+            'edit_patient_file': True,
         }
 
 ```settings.py```
