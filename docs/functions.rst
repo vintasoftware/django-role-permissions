@@ -58,6 +58,8 @@ permission is granted or not.
 Permission and role verification
 ================================
 
+The following functions will always return ``True`` for users with supper_user status.
+
 .. function:: has_role(user, roles)
 
 Receives a user and a role and returns ```True``` if user has the specified role. Roles can be passed as 
