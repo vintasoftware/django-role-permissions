@@ -39,6 +39,18 @@ Mixins
 Mixins require that the current logged user attend some permission grant.
 They are meant to be used on class based views.
 
-.. function:: class HasRoleMixin(object):
+.. function:: class HasRoleMixin(object)
+
+Add ``HasRoleMixin`` mixin to the desired CBV (class based view) and use the ``allowed_roles`` attribute to set the roles that can access the view. 
+``allowed_roles`` attribute will be passed to ``has_role`` function, and PermissionDenied will be raised in case it returns ``False``.
+
+.. code-block:: python
+	
+	from django.views.generic import TemplateView
+	from rolepermissions.mixins import HasRoleMixin
+
+	class MyView(HasRoleMixin, TemplateView):
+		allowed_roles = 'doctor'
+		...
 
 .. function:: class HasPermissionsMixin(object):
