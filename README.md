@@ -1,6 +1,7 @@
 # django-role-permissions
 
 A django app for role based permissions.
+```django-role-permissions``` supports Django 1.5 and later.
 
 *** IMPORTANT ***   
 Version 0.4 has introduced breaking changes. DO *NOT* try to migrate from version 0.3.X (or older), to post 0.4 versions.
