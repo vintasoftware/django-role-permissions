@@ -16,6 +16,14 @@ Documentation is available at:
 
 This packages uses tox to run tests on multiple evironments, please run ```python setup.py test``` before submiting a pull request.
 
+## Contributors
+
+Filipe Ximenes (filipeximenes)  
+Flavio Juvenal (fjsj)  
+Felipe Farias (felipefarias)  
+Victor Gutemberg (victorgutemberg)  
+Sutee Dee (sdee)  
+
 ## LICENSE
 
 The MIT License (MIT)
