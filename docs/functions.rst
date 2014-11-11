@@ -99,7 +99,7 @@ Receives a string referencing the object permission checker, a user and the obje
     clinic = Clinic.objects.get(id=1)
 
     if has_object_permission('access_clinic', user, clinic):
-        print 'access permited'
+        print 'access granted'
 
 
 Template tags
