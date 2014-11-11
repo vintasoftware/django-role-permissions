@@ -5,9 +5,9 @@ Roles
 Roles File
 ==========
 
-Create a ```roles.py``` file anywere inside your django project and reference it in the project settings file.
+Create a ``roles.py`` file anywere inside your django project and reference it in the project settings file.
 
-```my_project/roles.py```
+``my_project/roles.py``
 
 .. code-block:: python
 
@@ -23,13 +23,13 @@ Create a ```roles.py``` file anywere inside your django project and reference it
             'edit_patient_file': True,
         }
 
-```settings.py```
+``settings.py``
 
 .. code-block:: python
 
     ROLEPERMISSIONS_MODULE = 'my_project.roles'
 
-Each class that import's ```AbstractUserRole``` is a role on the project and has a snake case string representation.  
+Each class that import's ``AbstractUserRole`` is a role on the project and has a snake case string representation.  
 For example: 
 
 .. code-block:: python
@@ -41,11 +41,11 @@ For example:
             'drop_tables': True,
         }
 
-will have the string representation: ```system_admin```.
+will have the string representation: ``system_admin``.
 
 Available Role Permissions
 ==========================
 
-The field ```available_permissions``` lists what permissions the role can be granted. 
-The boolean referenced on the ```available_permissions``` dictionary is the default value to the 
+The field ``available_permissions`` lists what permissions the role can be granted. 
+The boolean referenced on the ``available_permissions`` dictionary is the default value to the 
 refered permission.  

@@ -13,7 +13,7 @@ Install from PyPI with ``pip``::
 Configuration
 =============
 
-Add ```rolepermissions``` to you ```INSTALLED_APPS```
+Add ``rolepermissions`` to you ``INSTALLED_APPS``
 
 .. code-block:: python
 
