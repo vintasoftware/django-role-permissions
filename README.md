@@ -23,6 +23,7 @@ Flavio Juvenal (fjsj)
 Felipe Farias (felipefarias)  
 Victor Gutemberg (victorgutemberg)  
 Sutee Dee (sdee)  
+Jonathan Barratt (reduxionist)
 
 ## LICENSE
 
