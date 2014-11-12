@@ -50,8 +50,9 @@ When you create a new user, set its role using:
 and check its permissions using
 
 .. code-block:: python
+    
     >>> from rolepermissions.verifications import has_permission
-
+    >>>
     >>> has_permission(user, 'create_medical_record')
     True
     >>> has_permission(user, 'edit_pacient_file')
