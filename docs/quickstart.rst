@@ -39,3 +39,20 @@ Add a reference to your roles module to your settings:
 .. code-block:: python
 
     ROLEPERMISSIONS_MODULE = 'myapplication.roles'
+
+When you create a new user, set its role using:
+
+.. code-block:: python
+    
+    user = User.objects.get(id=1)
+    
+    Doctor.assign_role_to_user(user)
+
+and check its permissions using
+
+.. code-block:: python
+
+    >>> has_permission(user, 'create_medical_record')
+    True
+    >>> has_permission(user, 'edit_pacient_file')
+    False
