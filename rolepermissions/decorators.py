@@ -1,3 +1,4 @@
+from functools import wraps
 
 from django.core.exceptions import PermissionDenied
 
@@ -7,6 +8,7 @@ from rolepermissions.verifications import has_role, has_permission
 
 def has_role_decorator(role):
     def request_decorator(dispatch):
+        @wraps(dispatch)
         def wrapper(request, *args, **kwargs):
             user = request.user
             if user.is_authenticated():
@@ -20,6 +22,7 @@ def has_role_decorator(role):
 
 def has_permission_decorator(permission_name):
     def request_decorator(dispatch):
+        @wraps(dispatch)
         def wrapper(request, *args, **kwargs):
             user = request.user
             if user.is_authenticated():
