@@ -18,12 +18,13 @@ This packages uses tox to run tests on multiple evironments, please run ```pytho
 
 ## Contributors
 
-Filipe Ximenes (filipeximenes)  
-Flavio Juvenal (fjsj)  
-Felipe Farias (felipefarias)  
-Victor Gutemberg (victorgutemberg)  
-Sutee Dee (sdee)  
-Jonathan Barratt (reduxionist)
+[filipeximenes](https://github.com/filipeximenes)   
+[fjsj](https://github.com/fjsj)  
+[felipefarias](https://github.com/felipefarias)  
+[victorgutemberg](https://github.com/victorgutemberg)  
+[sdee](https://github.com/sdee)  
+[reduxionist](https://github.com/reduxionist)
+[myonov](https://github.com/myonov)
 
 ## LICENSE
 
