@@ -23,7 +23,7 @@ This packages uses tox to run tests on multiple evironments, please run ```pytho
 [felipefarias](https://github.com/felipefarias)  
 [victorgutemberg](https://github.com/victorgutemberg)  
 [sdee](https://github.com/sdee)  
-[reduxionist](https://github.com/reduxionist)
+[reduxionist](https://github.com/reduxionist)  
 [myonov](https://github.com/myonov)
 
 ## LICENSE
