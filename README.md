@@ -1,7 +1,7 @@
 # django-role-permissions
 
 ```django-role-permissions``` is a django app for role based permissions. It's built on top of django ```contrib.auth``` user ```Group``` and ```Permission``` functionalities and it does not add any other models to your project.   
-```django-role-permissions``` supports Django 1.5 and later.
+```django-role-permissions``` supports Django 1.5, 1.6, 1.7, 1.8 and Python 2.7, 3.2, 3.3 and 3.4.
 
 *** IMPORTANT ***   
 Version 0.4 has introduced breaking changes. DO *NOT* try to migrate from version 0.3.X (or older), to post 0.4 versions.
