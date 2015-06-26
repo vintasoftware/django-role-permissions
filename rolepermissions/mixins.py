@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 
 from .decorators import has_permission_decorator, has_role_decorator
 

@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+
+from six import add_metaclass
 
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
@@ -6,33 +9,35 @@ from django.contrib.auth import get_user_model
 from rolepermissions.utils import camelToSnake
 
 
-class RolesClassRegister(type):
-    def __init__(cls, name, bases, nmspc):
-        super(RolesClassRegister, cls).__init__(name, bases, nmspc)
-        if not hasattr(cls, '_roles'):
-            cls._roles = {}
-        if not cls in bases:
-            cls._roles[cls.get_name()] = cls
-
-    def __iter__(cls):
-        return iter(cls._roles)
+registered_roles = {}
 
 
 class RolesManager(object):
 
+    def __iter__(cls):
+        return iter(registered_roles)
+
     @classmethod
     def retrieve_role(cls, role_name):
-        if role_name in AbstractUserRole._roles:
-            return AbstractUserRole._roles[role_name]
+        if role_name in registered_roles:
+            return registered_roles[role_name]
 
     @classmethod
     def get_roles_names(cls):
-        return [r for r, c in AbstractUserRole._roles.iteritems()]
+        return registered_roles.keys()
 
 
+class RolesClassRegister(type):
+
+    def __new__(cls, name, parents, dct):
+        role_class = super(RolesClassRegister, cls).__new__(cls, name, parents, dct)
+        if object not in parents:
+            registered_roles[role_class.get_name()] = role_class
+        return role_class
+
+
+@add_metaclass(RolesClassRegister)
 class AbstractUserRole(object):
-
-    __metaclass__ = RolesClassRegister
 
     @classmethod
     def get_name(cls):
@@ -44,7 +49,7 @@ class AbstractUserRole(object):
     @classmethod
     def assign_role_to_user(cls, user):
         old_groups = user.groups.all()
-        
+
         if old_groups:
             old_group = old_groups[0] # assumes a user has only one group
             role = RolesManager.retrieve_role(old_group.name)

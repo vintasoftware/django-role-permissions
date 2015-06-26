@@ -1,0 +1,26 @@
+# editorconfig.org
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.html]
+indent_size = 2
+insert_final_newline = false
+
+[*.css]
+indent_size = 2
+insert_final_newline = false
+
+[*.md]
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+[Makefile]
+indent_style = tab
+insert_final_newline = false

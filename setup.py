@@ -15,8 +15,9 @@ author = 'Filipe Ximenes'
 author_email = 'filipeximenes@gmail.com'
 license = 'MIT'
 install_requires = [
-    'Django >= 1.5.4',
-    'django-discover-runner == 1.0',
+    'Django>=1.5',
+    'django-discover-runner==1.0',
+    'six',
 ]
 
 
@@ -56,9 +57,9 @@ def get_package_data(package):
 if sys.argv[-1] == 'publish':
     os.system("python setup.py sdist upload")
     args = {'version': get_version(package)}
-    print "You probably want to also tag the version now:"
-    print "  git tag -a %(version)s -m 'version %(version)s'" % args
-    print "  git push --tags"
+    print("You probably want to also tag the version now:")
+    print("  git tag -a %(version)s -m 'version %(version)s'" % args)
+    print("  git push --tags")
     sys.exit()
 
 

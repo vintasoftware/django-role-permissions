@@ -1,5 +1,7 @@
+from __future__ import unicode_literals
 
 from rolepermissions.exceptions import CheckerNotRegistered
+
 
 class PermissionsManager(object):
     _checkers = {}
