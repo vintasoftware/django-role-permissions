@@ -11,6 +11,7 @@ def load_roles_and_permissions():
     for app_name in settings.INSTALLED_APPS:
         if app_name is not 'rolepermissions':
             try:
+                import_module(app_name)
                 import_module('.permissions', app_name)
             except ImportError:
                 pass
