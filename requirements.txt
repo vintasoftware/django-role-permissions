@@ -1,5 +1,6 @@
-tox==1.7.0
+tox==1.8
+six
 model-mommy==1.2.1
 django-discover-runner==1
 pysqlite==2.6.3
-Django<1.8
+Django==1.8

@@ -14,7 +14,6 @@ from rolepermissions.shortcuts import (
 from rolepermissions.verifications import has_permission
 
 
-
 class ShoRole1(AbstractUserRole):
     available_permissions = {
         'permission1': True,
@@ -72,14 +71,14 @@ class GrantPermissionTests(TestCase):
 
     def test_grant_permission(self):
         user = self.user
-        
+
         self.assertTrue(grant_permission(user, 'permission4'))
 
         self.assertTrue(has_permission(user, 'permission4'))
 
     def test_grat_granted_permission(self):
         user = self.user
-        
+
         self.assertTrue(grant_permission(user, 'permission3'))
 
         self.assertTrue(has_permission(user, 'permission3'))
@@ -97,14 +96,14 @@ class RevokePermissionTests(TestCase):
 
     def test_revoke_permission(self):
         user = self.user
-        
+
         self.assertTrue(revoke_permission(user, 'permission3'))
 
         self.assertFalse(has_permission(user, 'permission3'))
 
     def test_revoke_revoked_permission(self):
         user = self.user
-        
+
         self.assertTrue(revoke_permission(user, 'permission4'))
 
         self.assertFalse(has_permission(user, 'permission4'))
