@@ -48,14 +48,20 @@ class AbstractUserRole(object):
 
     @classmethod
     def assign_role_to_user(cls, user):
-        old_groups = user.groups.all()
+        """Deletes all of user's previous roles, and removes all permissions
+        mentioned in their available_permissions property.
 
-        if old_groups:
-            old_group = old_groups[0] # assumes a user has only one group
+        :returns: :py:class:`django.contrib.auth.models.Group` The group for the
+            new role.
+        """
+
+        old_groups = user.groups.filter(name__in=registered_roles.keys())
+
+        for old_group in old_groups:  # Normally there is only one, but remove all other role groups
             role = RolesManager.retrieve_role(old_group.name)
             permissions_to_remove = Permission.objects.filter(codename__in=role.permission_names_list()).all()
             user.user_permissions.remove(*permissions_to_remove)
-            user.groups.clear()
+        user.groups.remove(*old_groups)
 
         group, created = Group.objects.get_or_create(name=cls.get_name())
         user.groups.add(group)
@@ -81,18 +87,18 @@ class AbstractUserRole(object):
     @classmethod
     def get_or_create_permissions(cls, permission_names):
         user_ct = ContentType.objects.get_for_model(get_user_model())
-        permissions = list(Permission.objects.filter(content_type=user_ct, codename__in=permission_names).all())
+        permissions = list(Permission.objects.filter(
+            content_type=user_ct, codename__in=permission_names).all())
 
         if len(permissions) != len(permission_names):
             for permission_name in permission_names:
-                permission, created = Permission.objects.get_or_create(content_type=user_ct, codename=permission_name)
+                permission, created = Permission.objects.get_or_create(
+                    content_type=user_ct, codename=permission_name)
                 if created:
                     permissions.append(permission)
 
         return permissions
 
-
     @classmethod
     def get_default(cls, permission_name):
         return cls.available_permissions[permission_name]
-

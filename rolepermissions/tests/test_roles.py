@@ -1,6 +1,7 @@
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 
 from model_mommy import mommy
 
@@ -13,11 +14,13 @@ class RolRole1(AbstractUserRole):
         'permission2': True,
     }
 
+
 class RolRole2(AbstractUserRole):
     available_permissions = {
         'permission3': True,
         'permission4': False,
     }
+
 
 class RolRole3(AbstractUserRole):
     role_name = 'new_name'
@@ -94,15 +97,33 @@ class AbstractUserRoleTests(TestCase):
 
         self.assertEquals(user_role.name, 'rol_role1')
 
-        user_role = RolRole2.assign_role_to_user(user)
+        new_user_role = RolRole2.assign_role_to_user(user)
 
-        self.assertEquals(user_role.name, 'rol_role2')
+        self.assertEquals(new_user_role.name, 'rol_role2')
+        self.assertIn(new_user_role, user.groups.all())
+        self.assertNotIn(user_role, user.groups.all())
+
+    def test_dont_remove_other_groups(self):
+        user = mommy.make(get_user_model())
+        other_group = mommy.make(Group)
+        user.groups.add(other_group)
+
+        user_role = RolRole1.assign_role_to_user(user)
+
+        self.assertEquals(user_role.name, 'rol_role1')
+
+        new_user_role = RolRole2.assign_role_to_user(user)
+
+        self.assertEquals(new_user_role.name, 'rol_role2')
+        self.assertIn(new_user_role, user.groups.all())
+        self.assertIn(other_group, user.groups.all())
+        self.assertNotIn(user_role, user.groups.all())
 
     def test_delete_old_permissions_on_role_change(self):
         user = mommy.make(get_user_model())
 
         RolRole1().assign_role_to_user(user)
-        
+
         permissions = user.user_permissions.all()
 
         permission_names = [n.codename for n in permissions]
@@ -122,7 +143,6 @@ class AbstractUserRoleTests(TestCase):
         self.assertIn('permission3', permission_names)
         self.assertNotIn('permission4', permission_names)
         self.assertEquals(len(permissions), 1)
-
 
     def test_permission_names_list(self):
         self.assertIn('permission1', RolRole1.permission_names_list())
