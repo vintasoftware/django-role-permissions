@@ -25,6 +25,7 @@ This packages uses tox to run tests on multiple evironments, please run ```pytho
 [sdee](https://github.com/sdee)  
 [reduxionist](https://github.com/reduxionist)  
 [myonov](https://github.com/myonov)
+[aarcro](https://github.com/aarcro)
 
 ## Help
 
