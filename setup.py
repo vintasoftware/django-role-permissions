@@ -7,13 +7,7 @@ import os
 import sys
 
 
-name = 'django-role-permissions'
 package = 'rolepermissions'
-description = 'A django app for role based permissions.'
-url = 'http://github.com/vintasoftware/django-role-permissions'
-author = 'Filipe Ximenes'
-author_email = 'filipeximenes@gmail.com'
-license = 'MIT'
 install_requires = [
     'Django>=1.5',
     'django-discover-runner==1.0',
@@ -64,15 +58,27 @@ if sys.argv[-1] == 'publish':
 
 
 setup(
-    name=name,
+    name='django-role-permissions',
     version=get_version(package),
-    url=url,
-    license=license,
-    description=description,
-    author=author,
-    author_email=author_email,
+    url='http://github.com/vintasoftware/django-role-permissions',
+    license='MIT',
+    description='A django app for role based permissions.',
+    author='Filipe Ximenes',
+    author_email='filipeximenes@gmail.com',
     packages=get_packages(package),
     package_data=get_package_data(package),
     install_requires=install_requires,
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+    ],
     test_suite='tox'
 )
