@@ -48,6 +48,14 @@ class AvailablePermStatusTests(TestCase):
         self.assertTrue(perm_hash['permission3'])
         self.assertFalse(perm_hash['permission4'])
 
+    def test_permission_hash_after_modification(self):
+        revoke_permission(self.user, 'permission3')
+
+        perm_hash = available_perm_status(self.user)
+
+        self.assertFalse(perm_hash['permission3'])
+        self.assertFalse(perm_hash['permission4'])
+
 
 class GetUserRoleTests(TestCase):
 
