@@ -1,7 +1,6 @@
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from django.http import Http404
 
 from model_mommy import mommy
 
@@ -10,6 +9,7 @@ from rolepermissions.roles import RolesManager, AbstractUserRole
 from rolepermissions.shortcuts import (
     get_user_role, grant_permission,
     revoke_permission, retrieve_role,
+    available_perm_status
 )
 from rolepermissions.verifications import has_permission
 
@@ -20,11 +20,13 @@ class ShoRole1(AbstractUserRole):
         'permission2': True,
     }
 
+
 class ShoRole2(AbstractUserRole):
     available_permissions = {
         'permission3': True,
         'permission4': False,
     }
+
 
 class ShoRole3(AbstractUserRole):
     role_name = 'sho_new_name'
@@ -32,6 +34,19 @@ class ShoRole3(AbstractUserRole):
         'permission5': False,
         'permission6': False,
     }
+
+
+class AvailablePermStatusTests(TestCase):
+
+    def setUp(self):
+        self.user = mommy.make(get_user_model())
+        self.user_role = ShoRole2.assign_role_to_user(self.user)
+
+    def test_permission_hash(self):
+        perm_hash = available_perm_status(self.user)
+
+        self.assertTrue(perm_hash['permission3'])
+        self.assertFalse(perm_hash['permission4'])
 
 
 class GetUserRoleTests(TestCase):
@@ -131,5 +146,3 @@ class RetrieveRole(TestCase):
     def test_retrieve_unknowun_role(self):
         role = retrieve_role('unknowun_role')
         self.assertIsNone(role)
-
-
