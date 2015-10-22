@@ -30,6 +30,7 @@ This packages uses tox to run tests on multiple evironments, please run ```pytho
 [reduxionist](https://github.com/reduxionist)  
 [myonov](https://github.com/myonov)  
 [aarcro](https://github.com/aarcro)  
+[drxos](https://github.com/drxos)  
 
 ## Help
 
