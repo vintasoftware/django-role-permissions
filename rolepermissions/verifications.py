@@ -3,9 +3,6 @@ from __future__ import unicode_literals
 import inspect
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import Permission
-from django.contrib.auth import get_user_model
 
 from rolepermissions.roles import RolesManager
 from rolepermissions.permissions import PermissionsManager
