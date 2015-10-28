@@ -8,10 +8,15 @@ import sys
 
 
 package = 'rolepermissions'
-install_requires = [
+
+requirements = [
     'Django>=1.5',
     'django-discover-runner==1.0',
     'six',
+]
+test_requirements = [
+    'model-mommy==1.2.1',
+    'mock'
 ]
 
 
@@ -67,7 +72,7 @@ setup(
     author_email='filipeximenes@gmail.com',
     packages=get_packages(package),
     package_data=get_package_data(package),
-    install_requires=install_requires,
+    install_requires=requirements,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
@@ -80,5 +85,6 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
-    test_suite='tox'
+    test_suite='tox',
+    tests_require=test_requirements
 )
