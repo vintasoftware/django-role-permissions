@@ -31,7 +31,7 @@ Create a ``roles.py`` file in the same folder as your ``settings.py`` and two ro
 
     class Nurse(AbstractUserRole):
         available_permissions = {
-            'edit_pacient_file': True,
+            'edit_patient_file': True,
         }
 
 Add a reference to your roles module to your settings:
@@ -55,7 +55,7 @@ and check its permissions using
     >>>
     >>> has_permission(user, 'create_medical_record')
     True
-    >>> has_permission(user, 'edit_pacient_file')
+    >>> has_permission(user, 'edit_patient_file')
     False
 
 You can also change users permissions:
@@ -65,9 +65,9 @@ You can also change users permissions:
     >>> from rolepermissions.shortcuts import grant_permission, revoke_permission
     >>>
     >>> revoke_permission(user, 'create_medical_record')
-    >>> grant_permission(user, 'edit_pacient_file')
+    >>> grant_permission(user, 'edit_patient_file')
     >>>
     >>> has_permission(user, 'create_medical_record')
     False
-    >>> has_permission(user, 'edit_pacient_file')
+    >>> has_permission(user, 'edit_patient_file')
     True
