@@ -12,7 +12,7 @@ from rolepermissions.roles import RolesManager
 
 def get_permission(permission_name):
     user_ct = ContentType.objects.get_for_model(get_user_model())
-    permission, created = Permission.objects.get_or_create(content_type=user_ct, 
+    permission, created = Permission.objects.get_or_create(content_type=user_ct,
         codename=permission_name)
 
     return permission
@@ -28,24 +28,15 @@ def get_user_role(user):
 
 
 def available_perm_status(user):
+    from rolepermissions.verifications import has_permission
+
     role = get_user_role(user)
+    permission_names = role.permission_names_list()
 
-    permissions = UserPermission.objects.filter(user=user)
-    permissions = { p.permission_name: p for p in permissions }
+    permission_hash = {}
 
-    user_permissions = []
-    if role:
-        for permission_name in role.permission_names_list():
-            if permission_name in permissions:
-                permission = permissions[permission_name]
-            else:
-                permission = UserPermission(user=user, 
-                    permission_name=permission_name, 
-                    is_granted=role.get_default(permission_name))
-                permission.save()
-            user_permissions.append(permission)
-
-    permission_hash = { p.permission_name: p.is_granted for p in user_permissions }
+    for permission_name in permission_names:
+        permission_hash[permission_name] = has_permission(user, permission_name)
 
     return permission_hash
 

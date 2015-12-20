@@ -8,19 +8,19 @@ Shortcuts
 .. function:: get_user_role(user)
 
 .. code-block:: python
-    
+
     from rolepermissions.shortcuts import get_user_role
 
     role = get_user_role(user)
 
 .. function:: available_perm_status(user)
-    
-Returns a dictionary containg all permissions available to the role of the specified user. 
-Permissions are the keys of the dictionary, and values are ``True`` or ``False`` indicating if the 
+
+Returns a dictionary containg all permissions available to the role of the specified user.
+Permissions are the keys of the dictionary, and values are ``True`` or ``False`` indicating if the
 permission is granted or not.
 
 .. code-block:: python
-    
+
     from rolepermissions.shortcuts import available_perm_status
 
     permissions = available_perm_status(user)
@@ -30,16 +30,21 @@ permission is granted or not.
 
 .. function:: grant_permission(user, permission_name)
 
+Grants a permission to a user. Will not grant a permission that is not listed in the role
+``available_permissions``.
+
 .. code-block:: python
-    
+
     from rolepermissions.shortcuts import grant_permission
 
     grant_permission(user, 'create_medical_record')
 
 .. function:: revoke_permission(user, permission_name)
 
+Revokes a permission.
+
 .. code-block:: python
-    
+
     from rolepermissions.shortcuts import revoke_permission
 
     revoke_permission(user, 'create_medical_record')
@@ -47,7 +52,7 @@ permission is granted or not.
 .. function:: retrieve_role(role_name)
 
 .. code-block:: python
-    
+
     from rolepermissions.shortcuts import retrieve_role
     from my_project.roles import Doctor
 
@@ -62,7 +67,7 @@ The following functions will always return ``True`` for users with supper_user s
 
 .. function:: has_role(user, roles)
 
-Receives a user and a role and returns ``True`` if user has the specified role. Roles can be passed as 
+Receives a user and a role and returns ``True`` if user has the specified role. Roles can be passed as
 object, camel cased string representation or inside a list.
 
 .. code-block:: python

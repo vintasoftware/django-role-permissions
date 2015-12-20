@@ -29,7 +29,7 @@ Create a ``roles.py`` file anywere inside your django project and reference it i
 
     ROLEPERMISSIONS_MODULE = 'my_project.roles'
 
-Each class that import's ``AbstractUserRole`` is a role on the project and has a snake case string representation.  
+Each class that imports ``AbstractUserRole`` is a role on the project and has a snake case string representation.  
 For example: 
 
 .. code-block:: python
