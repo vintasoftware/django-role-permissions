@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/vintasoftware/django-role-permissions.svg?branch=master)](https://travis-ci.org/vintasoftware/django-role-permissions)
+
 # django-role-permissions
 
 ```django-role-permissions``` is a django app for role based permissions. It's built on top of django ```contrib.auth``` user ```Group``` and ```Permission``` functionalities and it does not add any other models to your project.   
