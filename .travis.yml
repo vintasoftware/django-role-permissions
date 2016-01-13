@@ -1,0 +1,7 @@
+language: python
+install:
+  - pip install tox
+script:
+  - tox
+python:
+  - 3.5
