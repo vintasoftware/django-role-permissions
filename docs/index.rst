@@ -17,6 +17,7 @@ Contents:
    checkers
    functions
    utilities
+   settings
 
 
 Indices and tables
