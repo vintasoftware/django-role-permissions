@@ -16,7 +16,10 @@ Documentation is available at:
 
 ## Running tests
 
-This packages uses tox to run tests on multiple evironments, please run ```python setup.py test``` before submiting a pull request.
+This packages uses `tox` to run tests on multiple evironments, please make sure they are passing before submiting a pull request.
+To run tests, install tox and run it in your command line from this project folder:
+
+``tox``
 
 ## Contributors
 

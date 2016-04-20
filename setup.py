@@ -86,6 +86,6 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-    test_suite='tox',
+    test_suite='rolepermissions.tests',
     tests_require=test_requirements
 )
