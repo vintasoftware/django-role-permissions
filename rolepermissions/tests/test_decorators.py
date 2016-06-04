@@ -2,6 +2,7 @@
 from django.views.generic import DetailView
 from django.utils.decorators import method_decorator
 from django.test import TestCase
+from django.test.utils import override_settings
 from django.contrib.auth import get_user_model
 from django.test.client import RequestFactory
 from django.core.exceptions import PermissionDenied
@@ -81,7 +82,7 @@ class HasRoleDecoratorTests(TestCase):
         DecRole2.assign_role_to_user(user)
 
         with self.assertRaises(PermissionDenied):
-            response = HasRoleDetailView.as_view()(request)
+            HasRoleDetailView.as_view()(request)
 
     def test_view_with_multiple_allowed_roles(self):
         user = self.user
@@ -141,4 +142,35 @@ class HasPermissionDecoratorTests(TestCase):
         DecRole2.assign_role_to_user(user)
 
         with self.assertRaises(PermissionDenied):
-            response = HasPermissionDetailView.as_view()(request)
+            HasPermissionDetailView.as_view()(request)
+
+
+@override_settings(
+    ROLEPERMISSIONS_REDIRECT_TO_LOGIN=True, LOGIN_URL='/login/',
+    ROOT_URLCONF='rolepermissions.tests.mock_urls')
+class RedirectToLoginTests(TestCase):
+
+    def setUp(self):
+        self.user = mommy.make(get_user_model())
+
+        self.factory = RequestFactory()
+
+        self.request = self.factory.get('/')
+        self.request.session = {}
+        self.request.user = self.user
+
+    def test_permission_redirects_to_login(self):
+        request = self.request
+
+        response = HasPermissionDetailView.as_view()(request)
+
+        self.assertEquals(response.status_code, 302)
+        self.assertIn('/login/', response['Location'])
+
+    def test_role_redirects_to_login(self):
+        request = self.request
+
+        response = HasRoleDetailView.as_view()(request)
+
+        self.assertEquals(response.status_code, 302)
+        self.assertIn('/login/', response['Location'])
