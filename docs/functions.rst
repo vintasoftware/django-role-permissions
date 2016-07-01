@@ -68,7 +68,7 @@ The following functions will always return ``True`` for users with supper_user s
 .. function:: has_role(user, roles)
 
 Receives a user and a role and returns ``True`` if user has the specified role. Roles can be passed as
-object, camel cased string representation or inside a list.
+object, snake cased string representation or inside a list.
 
 .. code-block:: python
 
