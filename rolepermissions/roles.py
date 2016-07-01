@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 from six import add_metaclass
 
 from django.contrib.auth.models import Group, Permission
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
 
 from rolepermissions.utils import camelToSnake
 
@@ -48,20 +48,16 @@ class AbstractUserRole(object):
 
     @classmethod
     def assign_role_to_user(cls, user):
-        """Deletes all of user's previous roles, and removes all permissions
+        """
+        Deletes all of user's previous roles, and removes all permissions
         mentioned in their available_permissions property.
 
         :returns: :py:class:`django.contrib.auth.models.Group` The group for the
             new role.
         """
+        from rolepermissions.shortcuts import remove_role
 
-        old_groups = user.groups.filter(name__in=registered_roles.keys())
-
-        for old_group in old_groups:  # Normally there is only one, but remove all other role groups
-            role = RolesManager.retrieve_role(old_group.name)
-            permissions_to_remove = Permission.objects.filter(codename__in=role.permission_names_list()).all()
-            user.user_permissions.remove(*permissions_to_remove)
-        user.groups.remove(*old_groups)
+        remove_role(user)
 
         group, created = Group.objects.get_or_create(name=cls.get_name())
         user.groups.add(group)

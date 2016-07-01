@@ -7,11 +7,32 @@ Shortcuts
 
 .. function:: get_user_role(user)
 
+Returns the role class of the user.
+
 .. code-block:: python
 
     from rolepermissions.shortcuts import get_user_role
 
     role = get_user_role(user)
+
+.. function:: assign_role(user, role)
+
+Assigns a role to the user. Role parameter can be passed as string or role class object.
+
+.. code-block:: python
+
+    from rolepermissions.shortcuts import assign_role
+
+    assign_role(user, 'doctor')
+
+.. function:: remove_role(user)
+
+Remove any role that was assigned to the specified user.
+
+.. code-block:: python
+    from rolepermissions.shortcuts import remove_role
+
+    remove_role(user)
 
 .. function:: available_perm_status(user)
 
@@ -48,17 +69,6 @@ Revokes a permission.
     from rolepermissions.shortcuts import revoke_permission
 
     revoke_permission(user, 'create_medical_record')
-
-.. function:: retrieve_role(role_name)
-
-.. code-block:: python
-
-    from rolepermissions.shortcuts import retrieve_role
-    from my_project.roles import Doctor
-
-    role = retrieve_role('doctor')
-
-    assert role == Doctor
 
 Permission and role verification
 ================================
