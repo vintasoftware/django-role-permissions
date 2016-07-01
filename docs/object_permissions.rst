@@ -6,7 +6,7 @@ Object permission checkers
 permissions.py file
 ===================
 
-You can add a ``permissions.py`` file to each app. This file should contain 
+You can add a ``permissions.py`` file to each app. This file should contain
 registered object permission checker functions.
 
 
@@ -29,3 +29,9 @@ registered object permission checker functions.
 
 when requested the object permission checker will receive the role of the user,
 the user and the object being verified and should return ``True`` if the permission is granted.
+
+
+Checking object permission
+==========================
+
+Use the :ref:`has_object_permission <has-object-permission>` method to check for object permissions.

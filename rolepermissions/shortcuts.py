@@ -30,8 +30,8 @@ def assign_role(user, role):
     if not role_cls:
         raise RoleDoesNotExist
 
-    remove_role(user)
     role_cls.assign_role_to_user(user)
+
     return role_cls
 
 

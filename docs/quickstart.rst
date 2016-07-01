@@ -2,22 +2,6 @@
 Quick Start
 ===========
 
-Install from PyPI with ``pip``::
-
-    pip install django-role-permissions
-
-
-Add ``rolepermissions`` to you ``INSTALLED_APPS``
-
-.. code-block:: python
-
-    INSTALLED_APPS = (
-        ...
-        'rolepermissions',
-        ...
-    )
-
-
 Create a ``roles.py`` file in the same folder as your ``settings.py`` and two roles:
 
 .. code-block:: python
@@ -44,8 +28,9 @@ When you create a new user, set its role using:
 
 .. code-block:: python
 
+    >>> from rolepermissions.shortcuts import assign_role
     >>> user = User.objects.get(id=1)
-    >>> Doctor.assign_role_to_user(user)
+    >>> assign_role(user, 'doctor')
 
 and check its permissions using
 

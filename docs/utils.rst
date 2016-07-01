@@ -1,6 +1,6 @@
-=========
-Functions
-=========
+=====
+Utils
+=====
 
 Shortcuts
 =========
@@ -70,6 +70,7 @@ Revokes a permission.
 
     revoke_permission(user, 'create_medical_record')
 
+
 Permission and role verification
 ================================
 
@@ -101,6 +102,8 @@ Receives a user and a permission and returns ``True`` is the user has ths specif
     if has_permission(user, 'create_medical_record'):
         medical_record = MedicalRecord(...)
         medical_record.save()
+
+.. _has-object-permission:
 
 .. function:: has_object_permission(checker_name, user, obj)
 

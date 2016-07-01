@@ -13,7 +13,7 @@ They are meant to be used on function based views.
 Accepts the same arguments as ``has_role`` function and raises PermissionDenied in case it returns ``False``.
 
 .. code-block:: python
-	
+
 	from rolepermissions.decorators import has_role_decorator
 
 	@has_role_decorator('doctor')
@@ -26,7 +26,7 @@ Accepts the same arguments as ``has_role`` function and raises PermissionDenied 
 Accepts the same arguments as ``has_permission`` function and raises PermissionDenied in case it returns ``False``.
 
 .. code-block:: python
-	
+
 	from rolepermissions.decorators import has_permission_decorator
 
 	@has_permission_decorator('create_medical_record')
@@ -41,11 +41,11 @@ They are meant to be used on class based views.
 
 .. function:: class HasRoleMixin(object)
 
-Add ``HasRoleMixin`` mixin to the desired CBV (class based view) and use the ``allowed_roles`` attribute to set the roles that can access the view. 
+Add ``HasRoleMixin`` mixin to the desired CBV (class based view) and use the ``allowed_roles`` attribute to set the roles that can access the view.
 ``allowed_roles`` attribute will be passed to ``has_role`` function, and PermissionDenied will be raised in case it returns ``False``.
 
 .. code-block:: python
-	
+
 	from django.views.generic import TemplateView
 	from rolepermissions.mixins import HasRoleMixin
 
@@ -55,11 +55,11 @@ Add ``HasRoleMixin`` mixin to the desired CBV (class based view) and use the ``a
 
 .. function:: class HasPermissionsMixin(object)
 
-Add ``HasPermissionsMixin`` mixin to the desired CBV (class based view) and use the ``required_permission`` attribute to set the roles that can access the view. 
+Add ``HasPermissionsMixin`` mixin to the desired CBV (class based view) and use the ``required_permission`` attribute to set the roles that can access the view.
 ``required_permission`` attribute will be passed to ``has_permission`` function, and PermissionDenied will be raised in case it returns ``False``.
 
 .. code-block:: python
-	
+
 	from django.views.generic import TemplateView
 	from rolepermissions.mixins import HasPermissionsMixin
 

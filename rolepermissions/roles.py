@@ -77,8 +77,8 @@ class AbstractUserRole(object):
             permission_names = [key for (key, default) in cls.available_permissions.items() if default]
 
             return cls.get_or_create_permissions(permission_names)
-        else:
-            return []
+
+        return []
 
     @classmethod
     def get_or_create_permissions(cls, permission_names):
