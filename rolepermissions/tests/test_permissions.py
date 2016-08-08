@@ -1,8 +1,5 @@
 
 from django.test import TestCase
-from django.contrib.auth import get_user_model
-
-from model_mommy import mommy
 
 from rolepermissions.permissions import PermissionsManager, register_object_checker
 from rolepermissions.exceptions import CheckerNotRegistered
