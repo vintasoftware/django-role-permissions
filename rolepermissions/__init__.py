@@ -2,7 +2,7 @@ import django
 from distutils.version import StrictVersion
 
 
-__version__ = '1.2'
+__version__ = '1.2.1'
 
 
 dj_version = django.get_version()
