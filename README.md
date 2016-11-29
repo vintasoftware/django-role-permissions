@@ -5,7 +5,6 @@
 ![Supported Python Versions](https://img.shields.io/pypi/pyversions/django-role-permissions.svg)
 
 ``django-role-permissions`` is a django app for role based permissions. It's built on top of django ``contrib.auth`` user ```Group``` and ``Permission`` functionalities and it does not add any other models to your project.   
-``django-role-permissions``.
 
 ## Documentation
 
@@ -16,21 +15,9 @@ Documentation is available at:
 ## Running tests
 
 This packages uses `tox` to run tests on multiple evironments, please make sure they are passing before submiting a pull request.
-To run tests, install tox and run it in your command line from this project folder:
+To run tests, install tox and run it in the command line from this project folder:
 
-``tox``
-
-## Contributors
-
-[filipeximenes](https://github.com/filipeximenes)   
-[fjsj](https://github.com/fjsj)  
-[felipefarias](https://github.com/felipefarias)  
-[victorgutemberg](https://github.com/victorgutemberg)  
-[sdee](https://github.com/sdee)  
-[reduxionist](https://github.com/reduxionist)  
-[myonov](https://github.com/myonov)  
-[aarcro](https://github.com/aarcro)  
-[drxos](https://github.com/drxos)  
+``$ tox``
 
 ## Help
 
