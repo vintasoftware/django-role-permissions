@@ -20,15 +20,40 @@ INSTALLED_APPS = (
 import django
 from distutils.version import LooseVersion
 
-if LooseVersion(django.get_version()) >= LooseVersion('1.5') \
-    and LooseVersion(django.get_version()) < LooseVersion('1.6'):
+
+try:
+    dj_version = LooseVersion(django.get_version())
+except:
+    dj_version = LooseVersion('1.10')
+
+if dj_version >= LooseVersion('1.5') and dj_version < LooseVersion('1.6'):
     INSTALLED_APPS += ('discover_runner',)
     TEST_RUNNER = 'discover_runner.DiscoverRunner'
 
 SECRET_KEY = 'abcde12345'
 
-if LooseVersion(django.get_version()) >= LooseVersion('1.7'):
+if dj_version >= LooseVersion('1.7'):
     MIDDLEWARE_CLASSES = (
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware'
     )
+
+if dj_version >= LooseVersion('1.8'):
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.contrib.auth.context_processors.auth',
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.i18n',
+                    'django.template.context_processors.media',
+                    'django.template.context_processors.static',
+                    'django.template.context_processors.tz',
+                    'django.contrib.messages.context_processors.messages',
+                ],
+            },
+        },
+    ]

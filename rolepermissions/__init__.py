@@ -5,10 +5,13 @@ from distutils.version import StrictVersion
 __version__ = '1.2.1'
 
 
-dj_version = django.get_version()
+try:
+    dj_version = StrictVersion(django.get_version())
+except:
+    dj_version = StrictVersion('1.10')
 
 
-if StrictVersion(dj_version) < StrictVersion('1.7'):
+if dj_version < StrictVersion('1.7'):
     from rolepermissions.loader import load_roles_and_permissions
     load_roles_and_permissions()
 else:
