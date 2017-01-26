@@ -49,6 +49,13 @@ class AssignRole(TestCase):
 
         self.assertEquals(get_user_role(user), ShoRole1)
 
+    def test_assign_role_by_class(self):
+        user = self.user
+
+        assign_role(user, ShoRole1)
+
+        self.assertEquals(get_user_role(user), ShoRole1)
+
     def test_assign_invalid_role(self):
         user = self.user
 

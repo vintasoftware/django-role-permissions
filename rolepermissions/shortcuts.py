@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+import inspect
+
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
 from django.contrib.auth import get_user_model
@@ -25,7 +27,9 @@ def get_user_role(user):
 
 
 def assign_role(user, role):
-    role_cls = retrieve_role(role)
+    role_cls = role
+    if not inspect.isclass(role):
+        role_cls = retrieve_role(role)
 
     if not role_cls:
         raise RoleDoesNotExist
