@@ -19,6 +19,6 @@ To run tests, install tox and run it in the command line from this project folde
 
 ``$ tox``
 
-## Help
+## Commercial Support
 
-If you have any questions or need help, please send an email to: contact@vinta.com.br
+This project, as other Vinta open-source projects, is used in products of Vinta clients. We are always looking for exciting work, so if you need any commercial support, feel free to get in touch: contact@vinta.com.br
