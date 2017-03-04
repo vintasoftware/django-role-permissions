@@ -1,0 +1,16 @@
+[run]
+
+branch = True
+parallel = True
+concurrency=multiprocessing
+source = ./rolepermissions
+
+omit =
+    *tests/*
+    *__init__*
+
+[report]
+skip_covered = True
+
+[html]
+directory = cover
