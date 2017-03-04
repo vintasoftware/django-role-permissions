@@ -49,20 +49,26 @@ class AbstractUserRole(object):
     @classmethod
     def assign_role_to_user(cls, user):
         """
-        Deletes all of user's previous roles, and removes all permissions
-        mentioned in their available_permissions property.
+        Assign this role to a user.
 
         :returns: :py:class:`django.contrib.auth.models.Group` The group for the
             new role.
         """
-        from rolepermissions.shortcuts import remove_role
-
-        remove_role(user)
-
-        group, created = Group.objects.get_or_create(name=cls.get_name())
+        group, _created = Group.objects.get_or_create(name=cls.get_name())
         user.groups.add(group)
         permissions_to_add = cls.get_default_true_permissions()
         user.user_permissions.add(*permissions_to_add)
+
+        return group
+
+    @classmethod
+    def remove_role_from_user(cls, user):
+        """Remove this role from a user."""
+        group, _created = Group.objects.get_or_create(name=cls.get_name())
+
+        user.groups.remove(group)
+        permissions_to_remove = Permission.objects.filter(codename__in=cls.permission_names_list()).all()
+        user.user_permissions.remove(*permissions_to_remove)
 
         return group
 

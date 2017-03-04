@@ -90,59 +90,38 @@ class AbstractUserRoleTests(TestCase):
 
         self.assertIsNotNone(user_role.pk)
 
-    def test_change_user_role(self):
+    def test_assign_multiple_roles(self):
         user = mommy.make(get_user_model())
 
-        user_role = RolRole1.assign_role_to_user(user)
+        user_role_1 = RolRole1.assign_role_to_user(user)
+        self.assertEquals(user_role_1.name, 'rol_role1')
 
-        self.assertEquals(user_role.name, 'rol_role1')
+        user_role_2 = RolRole2.assign_role_to_user(user)
+        self.assertEquals(user_role_2.name, 'rol_role2')
 
-        new_user_role = RolRole2.assign_role_to_user(user)
+        user_groups = user.groups.all()
 
-        self.assertEquals(new_user_role.name, 'rol_role2')
-        self.assertIn(new_user_role, user.groups.all())
-        self.assertNotIn(user_role, user.groups.all())
+        self.assertEqual(2, len(user_groups))
+        self.assertIn(user_role_1, user_groups)
+        self.assertIn(user_role_2, user_groups)
 
     def test_dont_remove_other_groups(self):
         user = mommy.make(get_user_model())
         other_group = mommy.make(Group)
         user.groups.add(other_group)
 
-        user_role = RolRole1.assign_role_to_user(user)
+        user_role_1 = RolRole1.assign_role_to_user(user)
+        self.assertEquals(user_role_1.name, 'rol_role1')
 
-        self.assertEquals(user_role.name, 'rol_role1')
+        user_role_2 = RolRole2.assign_role_to_user(user)
+        self.assertEquals(user_role_2.name, 'rol_role2')
 
-        new_user_role = RolRole2.assign_role_to_user(user)
+        RolRole2.remove_role_from_user(user)
 
-        self.assertEquals(new_user_role.name, 'rol_role2')
-        self.assertIn(new_user_role, user.groups.all())
-        self.assertIn(other_group, user.groups.all())
-        self.assertNotIn(user_role, user.groups.all())
+        user_groups = user.groups.all()
 
-    def test_delete_old_permissions_on_role_change(self):
-        user = mommy.make(get_user_model())
-
-        RolRole1().assign_role_to_user(user)
-
-        permissions = user.user_permissions.all()
-
-        permission_names = [n.codename for n in permissions]
-
-        self.assertIn('permission1', permission_names)
-        self.assertIn('permission2', permission_names)
-        self.assertEquals(len(permissions), 2)
-
-        RolRole2.assign_role_to_user(user)
-
-        permissions = user.user_permissions.all()
-
-        permission_names = [n.codename for n in permissions]
-
-        self.assertNotIn('permission1', permission_names)
-        self.assertNotIn('permission2', permission_names)
-        self.assertIn('permission3', permission_names)
-        self.assertNotIn('permission4', permission_names)
-        self.assertEquals(len(permissions), 1)
+        self.assertIn(user_role_1, user_groups)
+        self.assertIn(other_group, user_groups)
 
     def test_permission_names_list(self):
         self.assertIn('permission1', RolRole1.permission_names_list())

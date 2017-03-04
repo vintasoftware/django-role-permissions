@@ -6,10 +6,10 @@ from model_mommy import mommy
 
 from rolepermissions.roles import RolesManager, AbstractUserRole
 from rolepermissions.shortcuts import (
-    get_user_role, grant_permission,
+    get_user_roles, grant_permission,
     revoke_permission, retrieve_role,
     available_perm_status, assign_role,
-    remove_role
+    remove_role, clear_roles
 )
 from rolepermissions.verifications import has_permission
 from rolepermissions.exceptions import RoleDoesNotExist
@@ -37,7 +37,14 @@ class ShoRole3(AbstractUserRole):
     }
 
 
-class AssignRole(TestCase):
+class ShoRole4(AbstractUserRole):
+    available_permissions = {
+        'permission1': False,
+        'permission3': False,
+    }
+
+
+class AssignRoleTests(TestCase):
 
     def setUp(self):
         self.user = mommy.make(get_user_model())
@@ -47,14 +54,14 @@ class AssignRole(TestCase):
 
         assign_role(user, 'sho_role1')
 
-        self.assertEquals(get_user_role(user), ShoRole1)
+        self.assertListEqual([ShoRole1], get_user_roles(user))
 
     def test_assign_role_by_class(self):
         user = self.user
 
         assign_role(user, ShoRole1)
 
-        self.assertEquals(get_user_role(user), ShoRole1)
+        self.assertListEqual([ShoRole1], get_user_roles(user))
 
     def test_assign_invalid_role(self):
         user = self.user
@@ -62,19 +69,69 @@ class AssignRole(TestCase):
         with self.assertRaises(RoleDoesNotExist):
             assign_role(user, 'no role')
 
+    def test_assign_multiple_roles(self):
+        user = self.user
 
-class RemoveRole(TestCase):
+        assign_role(user, ShoRole1)
+        assign_role(user, ShoRole2)
+
+        self.assertListEqual([ShoRole1, ShoRole2], get_user_roles(user))
+
+
+class RemoveRoleTests(TestCase):
 
     def setUp(self):
         self.user = mommy.make(get_user_model())
 
-    def test_user_has_no_role(self):
+    def test_remove_role_from_user(self):
         user = self.user
 
-        assign_role(user, 'sho_role1')
-        remove_role(user)
+        assign_role(user, ShoRole1)
+        remove_role(user, ShoRole1)
 
-        self.assertEquals(get_user_role(user), None)
+        self.assertListEqual([], get_user_roles(user))
+
+    def test_remove_role_from_user_with_multiple_roles(self):
+        """Ensure that remove_role() only removes the role specified, not all of the user's roles."""
+        user = self.user
+
+        assign_role(user, ShoRole1)
+        assign_role(user, ShoRole2)
+        assign_role(user, ShoRole3)
+
+        remove_role(user, ShoRole2)
+
+        self.assertListEqual([ShoRole3, ShoRole1], get_user_roles(user))
+
+    def test_remove_role_user_isnt_assigned_to(self):
+        user = self.user
+
+        remove_role(user, ShoRole1)
+
+        self.assertListEqual([], get_user_roles(user))
+
+    def test_remove_invalid_role(self):
+        user = self.user
+
+        with self.assertRaises(RoleDoesNotExist):
+            assign_role(user, 'no role')
+
+
+class ClearRolesTests(TestCase):
+
+    def setUp(self):
+        self.user = mommy.make(get_user_model())
+
+    def test_clear_roles(self):
+        user = self.user
+
+        assign_role(user, ShoRole1)
+        assign_role(user, ShoRole2)
+        assign_role(user, ShoRole3)
+
+        clear_roles(user)
+
+        self.assertListEqual([], get_user_roles(user))
 
 
 class GetUserRoleTests(TestCase):
@@ -82,25 +139,35 @@ class GetUserRoleTests(TestCase):
     def setUp(self):
         self.user = mommy.make(get_user_model())
 
-    def test_get_user_role(self):
+    def test_get_user_roles(self):
         user = self.user
 
         ShoRole1.assign_role_to_user(user)
 
-        self.assertEquals(get_user_role(user), ShoRole1)
+        self.assertListEqual([ShoRole1], get_user_roles(user))
 
-    def test_get_user_role_after_role_change(self):
+    def test_get_user_roles_multiple_roles(self):
         user = self.user
 
         ShoRole1.assign_role_to_user(user)
         ShoRole3.assign_role_to_user(user)
 
-        self.assertEquals(get_user_role(user), ShoRole3)
+        self.assertListEqual([ShoRole3, ShoRole1], get_user_roles(user))
 
     def test_user_without_role(self):
         user = self.user
 
-        self.assertIsNone(get_user_role(user))
+        self.assertListEqual([], get_user_roles(user))
+
+    def test_ensure_user_roles_are_in_order(self):
+        user = self.user
+
+        assign_role(user, ShoRole2)
+        assign_role(user, ShoRole4)
+        assign_role(user, ShoRole1)
+        assign_role(user, ShoRole3)
+
+        self.assertListEqual([ShoRole3, ShoRole1, ShoRole2, ShoRole4], get_user_roles(user))
 
     def tearDown(self):
         RolesManager._roles = {}
@@ -115,6 +182,21 @@ class AvailablePermStatusTests(TestCase):
     def test_permission_hash(self):
         perm_hash = available_perm_status(self.user)
 
+        self.assertTrue(perm_hash['permission3'])
+        self.assertFalse(perm_hash['permission4'])
+
+    def test_permission_hash_multiple_groups(self):
+        """
+        If a user has a permission in any role, that permission should show as True,
+        no matter what other roles dictate.
+        """
+        ShoRole1.assign_role_to_user(self.user)
+        ShoRole4.assign_role_to_user(self.user)
+
+        perm_hash = available_perm_status(self.user)
+
+        self.assertTrue(perm_hash['permission1'])
+        self.assertTrue(perm_hash['permission2'])
         self.assertTrue(perm_hash['permission3'])
         self.assertFalse(perm_hash['permission4'])
 
@@ -152,6 +234,12 @@ class GrantPermissionTests(TestCase):
 
         self.assertFalse(grant_permission(user, 'permission1'))
 
+    def test_not_allowed_permission_multiple_roles(self):
+        user = self.user
+        ShoRole3.assign_role_to_user(self.user)
+
+        self.assertFalse(grant_permission(user, 'permission1'))
+
 
 class RevokePermissionTests(TestCase):
 
@@ -175,6 +263,12 @@ class RevokePermissionTests(TestCase):
 
     def test_not_allowed_permission(self):
         user = self.user
+
+        self.assertFalse(revoke_permission(user, 'permission1'))
+
+    def test_not_allowed_permission_multiple_roles(self):
+        user = self.user
+        ShoRole3.assign_role_to_user(self.user)
 
         self.assertFalse(revoke_permission(user, 'permission1'))
 
