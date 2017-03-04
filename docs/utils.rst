@@ -61,8 +61,8 @@ permission is granted or not.
 
 .. function:: grant_permission(user, permission_name)
 
-Grants a permission to a user. Will not grant a permission that is not listed in the user's roles'
-``available_permissions``.
+Grants a permission to a user. Will raise a ``RolePermissionScopeException`` for a permission that is not listed in the
+user's roles' ``available_permissions``.
 
 .. code-block:: python
 
@@ -72,7 +72,8 @@ Grants a permission to a user. Will not grant a permission that is not listed in
 
 .. function:: revoke_permission(user, permission_name)
 
-Revokes a permission from a user. Will not revoke a permission that is not listed in the user's roles'
+Revokes a permission from a user. Will raise a ``RolePermissionScopeException`` for a permission that is not listed in
+the user's roles' ``available_permissions``.
 
 .. code-block:: python
 

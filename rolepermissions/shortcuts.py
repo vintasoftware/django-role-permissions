@@ -7,7 +7,7 @@ from django.contrib.auth.models import Permission
 from django.contrib.auth import get_user_model
 
 from rolepermissions.roles import RolesManager
-from rolepermissions.exceptions import RoleDoesNotExist
+from rolepermissions.exceptions import RoleDoesNotExist, RolePermissionScopeException
 
 
 # Roles
@@ -89,7 +89,8 @@ def grant_permission(user, permission_name):
     """
     Grant a user a specified permission.
 
-    Permissions are only granted if they are available in any of the user's roles.
+    Permissions are only granted if they are in the scope any of the user's roles. If the permission is out of scope,
+    a RolePermissionScopeException is raised.
     """
     roles = get_user_roles(user)
 
@@ -97,16 +98,17 @@ def grant_permission(user, permission_name):
         if permission_name in role.permission_names_list():
             permission = get_permission(permission_name)
             user.user_permissions.add(permission)
-            return True
+            return
 
-    return False
+    raise RolePermissionScopeException("This permission isn't in the scope of any of this user's roles.")
 
 
 def revoke_permission(user, permission_name):
     """
     Revoke a specified permission from a user.
 
-    Permissions are only revoked if they are available in any of the user's roles.
+    Permissions are only revoked if they are in the scope any of the user's roles. If the permission is out of scope,
+    a RolePermissionScopeException is raised.
     """
     roles = get_user_roles(user)
 
@@ -114,6 +116,6 @@ def revoke_permission(user, permission_name):
         if permission_name in role.permission_names_list():
             permission = get_permission(permission_name)
             user.user_permissions.remove(permission)
-            return True
+            return
 
-    return False
+    raise RolePermissionScopeException("This permission isn't in the scope of any of this user's roles.")

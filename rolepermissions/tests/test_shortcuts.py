@@ -12,7 +12,7 @@ from rolepermissions.shortcuts import (
     remove_role, clear_roles
 )
 from rolepermissions.verifications import has_permission
-from rolepermissions.exceptions import RoleDoesNotExist
+from rolepermissions.exceptions import RoleDoesNotExist, RolePermissionScopeException
 
 
 class ShoRole1(AbstractUserRole):
@@ -218,27 +218,29 @@ class GrantPermissionTests(TestCase):
     def test_grant_permission(self):
         user = self.user
 
-        self.assertTrue(grant_permission(user, 'permission4'))
+        grant_permission(user, 'permission4')
 
         self.assertTrue(has_permission(user, 'permission4'))
 
     def test_grat_granted_permission(self):
         user = self.user
 
-        self.assertTrue(grant_permission(user, 'permission3'))
+        grant_permission(user, 'permission3')
 
         self.assertTrue(has_permission(user, 'permission3'))
 
     def test_not_allowed_permission(self):
         user = self.user
 
-        self.assertFalse(grant_permission(user, 'permission1'))
+        with self.assertRaises(RolePermissionScopeException):
+            grant_permission(user, 'permission1')
 
     def test_not_allowed_permission_multiple_roles(self):
         user = self.user
         ShoRole3.assign_role_to_user(self.user)
 
-        self.assertFalse(grant_permission(user, 'permission1'))
+        with self.assertRaises(RolePermissionScopeException):
+            grant_permission(user, 'permission1')
 
 
 class RevokePermissionTests(TestCase):
@@ -250,27 +252,29 @@ class RevokePermissionTests(TestCase):
     def test_revoke_permission(self):
         user = self.user
 
-        self.assertTrue(revoke_permission(user, 'permission3'))
+        revoke_permission(user, 'permission3')
 
         self.assertFalse(has_permission(user, 'permission3'))
 
     def test_revoke_revoked_permission(self):
         user = self.user
 
-        self.assertTrue(revoke_permission(user, 'permission4'))
+        revoke_permission(user, 'permission4')
 
         self.assertFalse(has_permission(user, 'permission4'))
 
     def test_not_allowed_permission(self):
         user = self.user
 
-        self.assertFalse(revoke_permission(user, 'permission1'))
+        with self.assertRaises(RolePermissionScopeException):
+            revoke_permission(user, 'permission1')
 
     def test_not_allowed_permission_multiple_roles(self):
         user = self.user
         ShoRole3.assign_role_to_user(self.user)
 
-        self.assertFalse(revoke_permission(user, 'permission1'))
+        with self.assertRaises(RolePermissionScopeException):
+            revoke_permission(user, 'permission1')
 
 
 class RetrieveRole(TestCase):
