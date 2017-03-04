@@ -64,11 +64,15 @@ class AbstractUserRole(object):
     @classmethod
     def remove_role_from_user(cls, user):
         """Remove this role from a user."""
-        group, _created = Group.objects.get_or_create(name=cls.get_name())
+        from rolepermissions.shortcuts import available_perm_status
 
+        group, _created = Group.objects.get_or_create(name=cls.get_name())
         user.groups.remove(group)
-        permissions_to_remove = Permission.objects.filter(codename__in=cls.permission_names_list()).all()
-        user.user_permissions.remove(*permissions_to_remove)
+
+        # Clear existing permissisons and reinstate based on remaining roles.
+        user.user_permissions.clear()
+        permissions_to_reinstate = [key for (key, value) in available_perm_status(user).items() if value]
+        user.user_permissions.add(*permissions_to_reinstate)
 
         return group
 

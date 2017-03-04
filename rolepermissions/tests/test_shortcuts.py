@@ -116,6 +116,36 @@ class RemoveRoleTests(TestCase):
         with self.assertRaises(RoleDoesNotExist):
             assign_role(user, 'no role')
 
+    def test_remove_role_reinstates_permissions_correctly(self):
+        user = self.user
+
+        assign_role(user, ShoRole2)
+        assign_role(user, ShoRole3)
+        assign_role(user, ShoRole4)
+
+        self.assertDictEqual(
+            {
+                "permission1": False,
+                "permission3": True,
+                "permission4": False,
+                "permission5": False,
+                "permission6": False,
+            },
+            available_perm_status(user)
+        )
+
+        remove_role(user, ShoRole2)
+
+        self.assertDictEqual(
+            {
+                "permission1": False,
+                "permission3": False,
+                "permission5": False,
+                "permission6": False,
+            },
+            available_perm_status(user)
+        )
+
 
 class ClearRolesTests(TestCase):
 
