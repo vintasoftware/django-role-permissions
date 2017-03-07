@@ -62,24 +62,74 @@ class AbstractUserRole(object):
         return group
 
     @classmethod
+    def _get_adjusted_true_permissions(cls, user):
+        """Get all true permissions for a user excluding ones that have been explicitly revoked."""
+        from rolepermissions.shortcuts import get_user_roles, available_perm_status
+
+        default_true_permissions = set()
+        user_permission_states = available_perm_status(user)
+        adjusted_true_permissions = set()
+
+        # Grab the default true permissions from each of the user's roles
+        for role in get_user_roles(user):
+            default_true_permissions.update(role.get_default_true_permissions())
+
+        # For each of those default true permissions, only keep ones that haven't been explicitly revoked
+        for permission in default_true_permissions:
+            if user_permission_states[permission.codename]:
+                adjusted_true_permissions.add(permission)
+
+        return adjusted_true_permissions
+
+    @classmethod
     def remove_role_from_user(cls, user):
-        """Remove this role from a user."""
-        from rolepermissions.shortcuts import available_perm_status
+        """
+        Remove this role from a user.
+
+        WARNING: Any permissions that were explicitly granted to the user that are also defined to be granted by this
+        role will be revoked when this role is revoked.
+
+        Example:
+            >>> class Doctor(AbstractUserRole):
+            ...     available_permissions = {
+            ...         "operate": False,
+            ...     }
+            >>>
+            >>> class Surgeon(AbstractUserRole):
+            ...     available_permissions = {
+            ...         "operate": True,
+            ...     }
+            >>>
+            >>> grant_permission(user, "operate")
+            >>> remove_role(user, Surgeon)
+            >>>
+            >>> has_permission(user, "operate")
+            False
+            >>>
+
+        In the example, the user no longer has the ``"operate"`` permission, even though it was set explicitly
+        before the ``Surgeon`` role was removed.
+        """
+
+        # Grab the adjusted true permissions before the removal
+        current_adjusted_true_permissions = cls._get_adjusted_true_permissions(user)
 
         group, _created = Group.objects.get_or_create(name=cls.get_name())
         user.groups.remove(group)
 
-        # Clear existing permissisons and reinstate based on remaining roles.
-        user.user_permissions.clear()
-        permissions_to_reinstate = [key for (key, value) in available_perm_status(user).items() if value]
-        user.user_permissions.add(*permissions_to_reinstate)
+        # Grab the adjusted true permissions after the removal
+        new_adjusted_true_permissions = cls._get_adjusted_true_permissions(user)
+
+        # Remove true permissions that were default granted only by the removed role
+        for permission in current_adjusted_true_permissions.difference(new_adjusted_true_permissions):
+            user.user_permissions.remove(permission)
 
         return group
 
     @classmethod
     def permission_names_list(cls):
         available_permissions = getattr(cls, 'available_permissions', {})
-        return [key for (key, value) in available_permissions.items()]
+        return available_permissions.keys()
 
     @classmethod
     def get_default_true_permissions(cls):

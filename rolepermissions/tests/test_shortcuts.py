@@ -79,72 +79,285 @@ class AssignRoleTests(TestCase):
 
 
 class RemoveRoleTests(TestCase):
+    enter_surgery_room = "enter_surgery_room"
+    operate = "operate"
+
+    class Doctor(AbstractUserRole):
+        available_permissions = {
+            "enter_surgery_room": False,
+        }
+
+    class Surgeon(AbstractUserRole):
+        available_permissions = {
+            "enter_surgery_room": True,
+            "operate": True,
+        }
+
+    class Anesthesiologist(AbstractUserRole):
+        available_permissions = {
+            "enter_surgery_room": True,
+            "operate": False,
+        }
 
     def setUp(self):
         self.user = mommy.make(get_user_model())
 
     def test_remove_role_from_user(self):
-        user = self.user
+        assign_role(self.user, self.Doctor)
+        remove_role(self.user, self.Doctor)
 
-        assign_role(user, ShoRole1)
-        remove_role(user, ShoRole1)
-
-        self.assertListEqual([], get_user_roles(user))
+        self.assertListEqual([], get_user_roles(self.user))
 
     def test_remove_role_from_user_with_multiple_roles(self):
         """Ensure that remove_role() only removes the role specified, not all of the user's roles."""
-        user = self.user
+        assign_role(self.user, self.Doctor)
+        assign_role(self.user, self.Surgeon)
+        assign_role(self.user, self.Anesthesiologist)
 
-        assign_role(user, ShoRole1)
-        assign_role(user, ShoRole2)
-        assign_role(user, ShoRole3)
+        remove_role(self.user, self.Doctor)
 
-        remove_role(user, ShoRole2)
-
-        self.assertListEqual([ShoRole3, ShoRole1], get_user_roles(user))
+        self.assertListEqual([self.Anesthesiologist, self.Surgeon], get_user_roles(self.user))
 
     def test_remove_role_user_isnt_assigned_to(self):
-        user = self.user
+        remove_role(self.user, self.Doctor)
 
-        remove_role(user, ShoRole1)
-
-        self.assertListEqual([], get_user_roles(user))
+        self.assertListEqual([], get_user_roles(self.user))
 
     def test_remove_invalid_role(self):
-        user = self.user
-
         with self.assertRaises(RoleDoesNotExist):
-            assign_role(user, 'no role')
+            assign_role(self.user, 'no role')
 
-    def test_remove_role_reinstates_permissions_correctly(self):
-        user = self.user
+    def test_remove_role_reinstates_permissions_correctly_scenario_1(self):
+        """
+        Initial Roles:
+            Doctor
+            Surgeon
 
-        assign_role(user, ShoRole2)
-        assign_role(user, ShoRole3)
-        assign_role(user, ShoRole4)
+        Actions:
+            Remove role: Surgeon
 
-        self.assertDictEqual(
-            {
-                "permission1": False,
-                "permission3": True,
-                "permission4": False,
-                "permission5": False,
-                "permission6": False,
-            },
-            available_perm_status(user)
-        )
+        Expected resulting permissions:
+            enter_surgery_room = False
+            operate = False
+        """
+        assign_role(self.user, self.Doctor)
+        assign_role(self.user, self.Surgeon)
 
-        remove_role(user, ShoRole2)
+        remove_role(self.user, self.Surgeon)
 
-        self.assertDictEqual(
-            {
-                "permission1": False,
-                "permission3": False,
-                "permission5": False,
-                "permission6": False,
-            },
-            available_perm_status(user)
-        )
+        self.assertFalse(has_permission(self.user, self.enter_surgery_room))
+        self.assertFalse(has_permission(self.user, self.operate))
+
+    def test_remove_role_reinstates_permissions_correctly_scenario_2(self):
+        """
+        Initial Roles:
+            Doctor
+            Surgeon
+
+        Actions:
+            Remove role: Doctor
+
+        Expected resulting permission:
+            enter_surgery_room = True
+            operate = True
+        """
+        assign_role(self.user, self.Doctor)
+        assign_role(self.user, self.Surgeon)
+
+        remove_role(self.user, self.Doctor)
+
+        self.assertTrue(has_permission(self.user, self.enter_surgery_room))
+        self.assertTrue(has_permission(self.user, self.operate))
+
+    def test_remove_role_reinstates_permissions_correctly_scenario_3(self):
+        """
+        Initial Roles:
+            Doctor
+            Surgeon
+
+        Actions:
+            Revoke permission: enter_surgery_room
+            Remove role: Surgeon
+
+        Expected resulting permission:
+            enter_surgery_room = False
+            operate = False
+        """
+        assign_role(self.user, self.Doctor)
+        assign_role(self.user, self.Surgeon)
+
+        revoke_permission(self.user, self.enter_surgery_room)
+        remove_role(self.user, self.Surgeon)
+
+        self.assertFalse(has_permission(self.user, self.enter_surgery_room))
+        self.assertFalse(has_permission(self.user, self.operate))
+
+    def test_remove_role_reinstates_permissions_correctly_scenario_4(self):
+        """
+        Initial Roles:
+            Doctor
+            Surgeon
+
+        Actions:
+            Revoke permission: enter_surgery_room
+            Remove role: Doctor
+
+        Expected resulting permission:
+            enter_surgery_room = False
+            operate = True
+        """
+        assign_role(self.user, self.Doctor)
+        assign_role(self.user, self.Surgeon)
+
+        revoke_permission(self.user, self.enter_surgery_room)
+        remove_role(self.user, self.Doctor)
+
+        self.assertFalse(has_permission(self.user, self.enter_surgery_room))
+        self.assertTrue(has_permission(self.user, self.operate))
+
+    def test_remove_role_reinstates_permissions_correctly_scenario_5(self):
+        """
+        Initial Roles:
+            Doctor
+            Surgeon
+
+        Actions:
+            Grant permission: operate
+            Remove role: Surgeon
+
+        Expected resulting permission:
+            enter_surgery_room = False
+            operate = True
+        """
+        assign_role(self.user, self.Doctor)
+        assign_role(self.user, self.Surgeon)
+
+        grant_permission(self.user, self.operate)
+        remove_role(self.user, self.Surgeon)
+
+        self.assertFalse(has_permission(self.user, self.enter_surgery_room))
+        self.assertFalse(has_permission(self.user, self.operate))
+
+    def test_remove_role_reinstates_permissions_correctly_scenario_6(self):
+        """
+        Initial Roles:
+            Doctor
+            Surgeon
+
+        Actions:
+            Revoke permission: enter_surgery_room
+            Revoke permission: operate
+            Remove role: Doctor
+
+        Expected resulting permission:
+            enter_surgery_room = False
+            operate = False
+        """
+        assign_role(self.user, self.Doctor)
+        assign_role(self.user, self.Surgeon)
+
+        revoke_permission(self.user, self.enter_surgery_room)
+        revoke_permission(self.user, self.operate)
+        remove_role(self.user, self.Doctor)
+
+        self.assertFalse(has_permission(self.user, self.enter_surgery_room))
+        self.assertFalse(has_permission(self.user, self.operate))
+
+    def test_remove_role_reinstates_permissions_correctly_scenario_7(self):
+        """
+        Initial Roles:
+            Doctor
+            Surgeon
+            Anesthesiologist
+
+        Actions:
+            Remove role: Surgeon
+
+        Expected resulting permission:
+            enter_surgery_room = True
+            operate = False
+        """
+        assign_role(self.user, self.Doctor)
+        assign_role(self.user, self.Surgeon)
+        assign_role(self.user, self.Anesthesiologist)
+
+        remove_role(self.user, self.Surgeon)
+
+        self.assertTrue(has_permission(self.user, self.enter_surgery_room))
+        self.assertFalse(has_permission(self.user, self.operate))
+
+    def test_remove_role_reinstates_permissions_correctly_scenario_8(self):
+        """
+        Initial Roles:
+            Doctor
+            Surgeon
+            Anesthesiologist
+
+        Actions:
+            Remove role: Doctor
+
+        Expected resulting permission:
+            enter_surgery_room = True
+            operate = True
+        """
+        assign_role(self.user, self.Doctor)
+        assign_role(self.user, self.Surgeon)
+        assign_role(self.user, self.Anesthesiologist)
+
+        remove_role(self.user, self.Doctor)
+
+        self.assertTrue(has_permission(self.user, self.enter_surgery_room))
+        self.assertTrue(has_permission(self.user, self.operate))
+
+    def test_remove_role_reinstates_permissions_correctly_scenario_9(self):
+        """
+        Initial Roles:
+            Doctor
+            Surgeon
+            Anesthesiologist
+
+        Actions:
+            Revoke permission: enter_surgery_room
+            Remove role: Surgeon
+
+        Expected resulting permission:
+            enter_surgery_room = False
+            operate = False
+        """
+        assign_role(self.user, self.Doctor)
+        assign_role(self.user, self.Surgeon)
+        assign_role(self.user, self.Anesthesiologist)
+
+        revoke_permission(self.user, self.enter_surgery_room)
+        remove_role(self.user, self.Surgeon)
+
+        self.assertFalse(has_permission(self.user, self.enter_surgery_room))
+        self.assertFalse(has_permission(self.user, self.operate))
+
+    def test_remove_role_reinstates_permissions_correctly_scenario_10(self):
+        """
+        Initial Roles:
+            Doctor
+            Surgeon
+            Anesthesiologist
+
+        Actions:
+            Revoke permission: enter_surgery_room
+            Remove role: Doctor
+
+        Expected resulting permission:
+            enter_surgery_room = False
+            operate = True
+        """
+        assign_role(self.user, self.Doctor)
+        assign_role(self.user, self.Surgeon)
+        assign_role(self.user, self.Anesthesiologist)
+
+        revoke_permission(self.user, self.enter_surgery_room)
+        remove_role(self.user, self.Doctor)
+
+        self.assertFalse(has_permission(self.user, self.enter_surgery_room))
+        self.assertTrue(has_permission(self.user, self.operate))
 
 
 class ClearRolesTests(TestCase):

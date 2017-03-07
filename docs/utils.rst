@@ -34,6 +34,31 @@ Removes a role from a user. Role parameter can be passed as string or role class
 
     remove_role(user, 'doctor')
 
+WARNING: Any permissions that were explicitly granted to the user that are also defined to be granted by this role will
+be revoked when this role is revoked.
+
+Example:
+.. code-block:: python
+    >>> class Doctor(AbstractUserRole):
+    ...     available_permissions = {
+    ...         "operate": False,
+    ...     }
+    >>>
+    >>> class Surgeon(AbstractUserRole):
+    ...     available_permissions = {
+    ...         "operate": True,
+    ...     }
+    >>>
+    >>> grant_permission(user, "operate")
+    >>> remove_role(user, Surgeon)
+    >>>
+    >>> has_permission(user, "operate")
+    False
+    >>>
+
+In the example, the user no longer has the ``"operate"`` permission, even though it was set explicitly before the
+``Surgeon`` role was removed.
+
 .. function:: clear_roles(user)
 
 Clear all of a user's roles.
