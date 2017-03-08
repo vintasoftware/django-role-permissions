@@ -6,7 +6,6 @@ from django.conf import settings
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
 
-from rolepermissions.roles import RolesManager
 from rolepermissions.verifications import has_role, has_permission
 
 
