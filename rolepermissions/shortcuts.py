@@ -21,7 +21,8 @@ def retrieve_role(role_name):
 def get_user_roles(user):
     """Get a list of a users's roles."""
     if user:
-        roles = user.groups.filter(name__in=RolesManager.get_roles_names()).order_by("name")
+        roles = user.groups.filter(
+            name__in=RolesManager.get_roles_names()).order_by("name")
         return [RolesManager.retrieve_role(role.name) for role in roles]
     else:
         return []
@@ -66,13 +67,17 @@ def clear_roles(user):
 def get_permission(permission_name):
     """Get a Permission object from a permission name."""
     user_ct = ContentType.objects.get_for_model(get_user_model())
-    permission, _created = Permission.objects.get_or_create(content_type=user_ct, codename=permission_name)
+    permission, _created = Permission.objects.get_or_create(
+        content_type=user_ct, codename=permission_name)
 
     return permission
 
 
 def available_perm_status(user):
-    """Get a boolean map of the permissions available to a user based on that user's roles."""
+    """
+    Get a boolean map of the permissions available to a user
+    based on that user's roles.
+    """
     roles = get_user_roles(user)
     permission_hash = {}
 
@@ -80,7 +85,8 @@ def available_perm_status(user):
         permission_names = role.permission_names_list()
 
         for permission_name in permission_names:
-            permission_hash[permission_name] = get_permission(permission_name) in user.user_permissions.all()
+            permission_hash[permission_name] = get_permission(
+                permission_name) in user.user_permissions.all()
 
     return permission_hash
 
@@ -89,7 +95,8 @@ def grant_permission(user, permission_name):
     """
     Grant a user a specified permission.
 
-    Permissions are only granted if they are in the scope any of the user's roles. If the permission is out of scope,
+    Permissions are only granted if they are in the scope any of the
+    user's roles. If the permission is out of scope,
     a RolePermissionScopeException is raised.
     """
     roles = get_user_roles(user)
@@ -100,15 +107,18 @@ def grant_permission(user, permission_name):
             user.user_permissions.add(permission)
             return
 
-    raise RolePermissionScopeException("This permission isn't in the scope of any of this user's roles.")
+    raise RolePermissionScopeException(
+        "This permission isn't in the scope of "
+        "any of this user's roles.")
 
 
 def revoke_permission(user, permission_name):
     """
     Revoke a specified permission from a user.
 
-    Permissions are only revoked if they are in the scope any of the user's roles. If the permission is out of scope,
-    a RolePermissionScopeException is raised.
+    Permissions are only revoked if they are in the scope any of the user's
+    roles. If the permission is out of scope, a RolePermissionScopeException
+    is raised.
     """
     roles = get_user_roles(user)
 
@@ -118,4 +128,6 @@ def revoke_permission(user, permission_name):
             user.user_permissions.remove(permission)
             return
 
-    raise RolePermissionScopeException("This permission isn't in the scope of any of this user's roles.")
+    raise RolePermissionScopeException(
+        "This permission isn't in the scope of "
+        "any of this user's roles.")
