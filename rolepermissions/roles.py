@@ -49,17 +49,12 @@ class AbstractUserRole(object):
     @classmethod
     def assign_role_to_user(cls, user):
         """
-        Deletes all of user's previous roles, and removes all permissions
-        mentioned in their available_permissions property.
+        Assign this role to a user.
 
         :returns: :py:class:`django.contrib.auth.models.Group` The group for the
             new role.
         """
-        from rolepermissions.shortcuts import remove_role
-
-        remove_role(user)
-
-        group, created = Group.objects.get_or_create(name=cls.get_name())
+        group, _created = Group.objects.get_or_create(name=cls.get_name())
         user.groups.add(group)
         permissions_to_add = cls.get_default_true_permissions()
         user.user_permissions.add(*permissions_to_add)
@@ -67,9 +62,74 @@ class AbstractUserRole(object):
         return group
 
     @classmethod
+    def _get_adjusted_true_permissions(cls, user):
+        """Get all true permissions for a user excluding ones that have been explicitly revoked."""
+        from rolepermissions.shortcuts import get_user_roles, available_perm_status
+
+        default_true_permissions = set()
+        user_permission_states = available_perm_status(user)
+        adjusted_true_permissions = set()
+
+        # Grab the default true permissions from each of the user's roles
+        for role in get_user_roles(user):
+            default_true_permissions.update(role.get_default_true_permissions())
+
+        # For each of those default true permissions, only keep ones that haven't been explicitly revoked
+        for permission in default_true_permissions:
+            if user_permission_states[permission.codename]:
+                adjusted_true_permissions.add(permission)
+
+        return adjusted_true_permissions
+
+    @classmethod
+    def remove_role_from_user(cls, user):
+        """
+        Remove this role from a user.
+
+        WARNING: Any permissions that were explicitly granted to the user that are also defined to be granted by this
+        role will be revoked when this role is revoked.
+
+        Example:
+            >>> class Doctor(AbstractUserRole):
+            ...     available_permissions = {
+            ...         "operate": False,
+            ...     }
+            >>>
+            >>> class Surgeon(AbstractUserRole):
+            ...     available_permissions = {
+            ...         "operate": True,
+            ...     }
+            >>>
+            >>> grant_permission(user, "operate")
+            >>> remove_role(user, Surgeon)
+            >>>
+            >>> has_permission(user, "operate")
+            False
+            >>>
+
+        In the example, the user no longer has the ``"operate"`` permission, even though it was set explicitly
+        before the ``Surgeon`` role was removed.
+        """
+
+        # Grab the adjusted true permissions before the removal
+        current_adjusted_true_permissions = cls._get_adjusted_true_permissions(user)
+
+        group, _created = Group.objects.get_or_create(name=cls.get_name())
+        user.groups.remove(group)
+
+        # Grab the adjusted true permissions after the removal
+        new_adjusted_true_permissions = cls._get_adjusted_true_permissions(user)
+
+        # Remove true permissions that were default granted only by the removed role
+        for permission in current_adjusted_true_permissions.difference(new_adjusted_true_permissions):
+            user.user_permissions.remove(permission)
+
+        return group
+
+    @classmethod
     def permission_names_list(cls):
         available_permissions = getattr(cls, 'available_permissions', {})
-        return [key for (key, value) in available_permissions.items()]
+        return available_permissions.keys()
 
     @classmethod
     def get_default_true_permissions(cls):

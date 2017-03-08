@@ -5,15 +5,15 @@ Utils
 Shortcuts
 =========
 
-.. function:: get_user_role(user)
+.. function:: get_user_roles(user)
 
-Returns the role class of the user.
+Returns the user's roles.
 
 .. code-block:: python
 
-    from rolepermissions.shortcuts import get_user_role
+    from rolepermissions.shortcuts import get_user_roles
 
-    role = get_user_role(user)
+    role = get_user_roles(user)
 
 .. function:: assign_role(user, role)
 
@@ -25,18 +25,53 @@ Assigns a role to the user. Role parameter can be passed as string or role class
 
     assign_role(user, 'doctor')
 
-.. function:: remove_role(user)
+.. function:: remove_role(user, role)
 
-Remove any role that was assigned to the specified user.
+Removes a role from a user. Role parameter can be passed as string or role class object.
 
 .. code-block:: python
     from rolepermissions.shortcuts import remove_role
 
-    remove_role(user)
+    remove_role(user, 'doctor')
+
+WARNING: Any permissions that were explicitly granted to the user that are also defined to be granted by this role will
+be revoked when this role is revoked.
+
+Example:
+.. code-block:: python
+    >>> class Doctor(AbstractUserRole):
+    ...     available_permissions = {
+    ...         "operate": False,
+    ...     }
+    >>>
+    >>> class Surgeon(AbstractUserRole):
+    ...     available_permissions = {
+    ...         "operate": True,
+    ...     }
+    >>>
+    >>> grant_permission(user, "operate")
+    >>> remove_role(user, Surgeon)
+    >>>
+    >>> has_permission(user, "operate")
+    False
+    >>>
+
+In the example, the user no longer has the ``"operate"`` permission, even though it was set explicitly before the
+``Surgeon`` role was removed.
+
+.. function:: clear_roles(user)
+
+Clear all of a user's roles.
+
+.. code-block:: python
+    from rolepermissions.shortcuts import clear_roles
+
+    clear_roles(user)
 
 .. function:: available_perm_status(user)
 
-Returns a dictionary containg all permissions available to the role of the specified user.
+Returns a dictionary containing all permissions available across all the specified user's roles. Note that if a
+permission is granted in one role, it overrides any permissions set to ``False`` in other roles.
 Permissions are the keys of the dictionary, and values are ``True`` or ``False`` indicating if the
 permission is granted or not.
 
@@ -47,12 +82,12 @@ permission is granted or not.
     permissions = available_perm_status(user)
 
     if permissions['create_medical_record']:
-        print 'user can create medical record'
+        print('user can create medical record')
 
 .. function:: grant_permission(user, permission_name)
 
-Grants a permission to a user. Will not grant a permission that is not listed in the role
-``available_permissions``.
+Grants a permission to a user. Will raise a ``RolePermissionScopeException`` for a permission that is not listed in the
+user's roles' ``available_permissions``.
 
 .. code-block:: python
 
@@ -62,7 +97,8 @@ Grants a permission to a user. Will not grant a permission that is not listed in
 
 .. function:: revoke_permission(user, permission_name)
 
-Revokes a permission.
+Revokes a permission from a user. Will raise a ``RolePermissionScopeException`` for a permission that is not listed in
+the user's roles' ``available_permissions``.
 
 .. code-block:: python
 
@@ -74,7 +110,7 @@ Revokes a permission.
 Permission and role verification
 ================================
 
-The following functions will always return ``True`` for users with supper_user status.
+The following functions will always return ``True`` for users with supperuser status.
 
 .. function:: has_role(user, roles)
 

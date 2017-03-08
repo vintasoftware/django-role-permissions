@@ -7,3 +7,7 @@ class CheckerNotRegistered(Exception):
 
 class RoleDoesNotExist(Exception):
     pass
+
+
+class RolePermissionScopeException(Exception):
+    pass

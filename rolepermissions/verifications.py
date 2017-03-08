@@ -2,14 +2,13 @@ from __future__ import unicode_literals
 
 import inspect
 
-from django.core.exceptions import ObjectDoesNotExist
-
 from rolepermissions.roles import RolesManager
 from rolepermissions.permissions import PermissionsManager
-from rolepermissions.shortcuts import get_user_role, get_permission
+from rolepermissions.shortcuts import get_user_roles, available_perm_status
 
 
 def has_role(user, roles):
+    """Check if a user has any of the given roles."""
     if user and user.is_superuser:
         return True
 
@@ -23,37 +22,25 @@ def has_role(user, roles):
 
         normalized_roles.append(role)
 
-    try:
-        user_role = get_user_role(user)
-    except ObjectDoesNotExist:
-        return False
+    user_roles = get_user_roles(user)
 
-    if not user_role:
-        return False
-
-    return user_role in normalized_roles
+    return any([role in user_roles for role in normalized_roles])
 
 
 def has_permission(user, permission_name):
+    """Check if a user has a given permission."""
     if user and user.is_superuser:
         return True
 
-    role = get_user_role(user)
-
-    if role and permission_name in role.permission_names_list():
-        permission = get_permission(permission_name)
-
-        if permission in user.user_permissions.all():
-            return True
-
-    return False
+    return available_perm_status(user).get(permission_name, False)
 
 
 def has_object_permission(checker_name, user, obj):
-    if user.is_superuser:
+    """Check if a user has permission to perform an action on an object."""
+    if user and user.is_superuser:
         return True
 
     checker = PermissionsManager.retrieve_checker(checker_name)
-    role = get_user_role(user)
+    user_roles = get_user_roles(user)
 
-    return checker(role, user, obj)
+    return any([checker(user_role, user, obj) for user_role in user_roles])
