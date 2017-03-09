@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
 
-from rolepermissions.verifications import has_role, has_permission
+from rolepermissions.checkers import has_role, has_permission
 
 
 def has_role_decorator(role):

@@ -1,8 +1,7 @@
 
 from django.views.generic import DetailView
-from django.utils.decorators import method_decorator
 from django.test import TestCase
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model
 from django.test.client import RequestFactory
 from django.core.exceptions import PermissionDenied
 from django.http.response import HttpResponse

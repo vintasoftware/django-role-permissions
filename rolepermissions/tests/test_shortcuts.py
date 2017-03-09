@@ -5,14 +5,16 @@ from django.contrib.auth import get_user_model
 from model_mommy import mommy
 
 from rolepermissions.roles import RolesManager, AbstractUserRole
-from rolepermissions.shortcuts import (
-    get_user_roles, grant_permission,
-    revoke_permission, retrieve_role,
-    available_perm_status, assign_role,
-    remove_role, clear_roles
+from rolepermissions.roles import (
+    get_user_roles, retrieve_role,
+    assign_role, remove_role, clear_roles
 )
-from rolepermissions.verifications import has_permission
-from rolepermissions.exceptions import RoleDoesNotExist, RolePermissionScopeException
+from rolepermissions.permissions import (
+    grant_permission, revoke_permission,
+    available_perm_status)
+from rolepermissions.checkers import has_permission
+from rolepermissions.exceptions import (
+    RoleDoesNotExist, RolePermissionScopeException)
 
 
 class ShoRole1(AbstractUserRole):

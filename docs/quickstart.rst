@@ -28,7 +28,7 @@ When you create a new user, set its role using:
 
 .. code-block:: python
 
-    >>> from rolepermissions.shortcuts import assign_role
+    >>> from rolepermissions.roles import assign_role
     >>> user = User.objects.get(id=1)
     >>> assign_role(user, 'doctor')
 
@@ -36,7 +36,7 @@ and check its permissions using
 
 .. code-block:: python
 
-    >>> from rolepermissions.verifications import has_permission
+    >>> from rolepermissions.checkers import has_permission
     >>>
     >>> has_permission(user, 'create_medical_record')
     True
@@ -47,7 +47,7 @@ You can also change users permissions:
 
 .. code-block:: python
 
-    >>> from rolepermissions.shortcuts import grant_permission, revoke_permission
+    >>> from rolepermissions.permissions import grant_permission, revoke_permission
     >>>
     >>> revoke_permission(user, 'create_medical_record')
     >>> grant_permission(user, 'edit_patient_file')

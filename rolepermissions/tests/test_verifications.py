@@ -4,8 +4,8 @@ from django.contrib.auth import get_user_model
 
 from model_mommy import mommy
 
-from rolepermissions.roles import RolesManager, AbstractUserRole
-from rolepermissions.verifications import has_role, has_permission, has_object_permission
+from rolepermissions.roles import AbstractUserRole
+from rolepermissions.checkers import has_role, has_permission, has_object_permission
 from rolepermissions.permissions import register_object_checker
 
 
