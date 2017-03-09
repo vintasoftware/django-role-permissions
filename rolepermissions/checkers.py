@@ -2,9 +2,10 @@ from __future__ import unicode_literals
 
 import inspect
 
-from rolepermissions.roles import RolesManager
-from rolepermissions.permissions import PermissionsManager
-from rolepermissions.shortcuts import get_user_roles, available_perm_status
+from rolepermissions.roles import (
+    RolesManager, get_user_roles)
+from rolepermissions.permissions import (
+    PermissionsManager, available_perm_status)
 
 
 def has_role(user, roles):

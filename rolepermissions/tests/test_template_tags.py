@@ -5,8 +5,7 @@ from django.template import Context, Template
 
 from model_mommy import mommy
 
-from rolepermissions.roles import RolesManager, AbstractUserRole
-from rolepermissions.templatetags.permission_tags import has_role_template_tag
+from rolepermissions.roles import AbstractUserRole
 
 
 class TemRole1(AbstractUserRole):

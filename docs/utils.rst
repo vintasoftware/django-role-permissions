@@ -11,7 +11,7 @@ Returns the user's roles.
 
 .. code-block:: python
 
-    from rolepermissions.shortcuts import get_user_roles
+    from rolepermissions.roles import get_user_roles
 
     role = get_user_roles(user)
 
@@ -21,7 +21,7 @@ Assigns a role to the user. Role parameter can be passed as string or role class
 
 .. code-block:: python
 
-    from rolepermissions.shortcuts import assign_role
+    from rolepermissions.roles import assign_role
 
     assign_role(user, 'doctor')
 
@@ -30,7 +30,8 @@ Assigns a role to the user. Role parameter can be passed as string or role class
 Removes a role from a user. Role parameter can be passed as string or role class object.
 
 .. code-block:: python
-    from rolepermissions.shortcuts import remove_role
+
+    from rolepermissions.roles import remove_role
 
     remove_role(user, 'doctor')
 
@@ -38,7 +39,9 @@ WARNING: Any permissions that were explicitly granted to the user that are also 
 be revoked when this role is revoked.
 
 Example:
+
 .. code-block:: python
+
     >>> class Doctor(AbstractUserRole):
     ...     available_permissions = {
     ...         "operate": False,
@@ -54,7 +57,6 @@ Example:
     >>>
     >>> has_permission(user, "operate")
     False
-    >>>
 
 In the example, the user no longer has the ``"operate"`` permission, even though it was set explicitly before the
 ``Surgeon`` role was removed.
@@ -64,7 +66,8 @@ In the example, the user no longer has the ``"operate"`` permission, even though
 Clear all of a user's roles.
 
 .. code-block:: python
-    from rolepermissions.shortcuts import clear_roles
+
+    from rolepermissions.roles import clear_roles
 
     clear_roles(user)
 
@@ -77,7 +80,7 @@ permission is granted or not.
 
 .. code-block:: python
 
-    from rolepermissions.shortcuts import available_perm_status
+    from rolepermissions.permissions import available_perm_status
 
     permissions = available_perm_status(user)
 
@@ -91,7 +94,7 @@ user's roles' ``available_permissions``.
 
 .. code-block:: python
 
-    from rolepermissions.shortcuts import grant_permission
+    from rolepermissions.permissions import grant_permission
 
     grant_permission(user, 'create_medical_record')
 
@@ -102,7 +105,7 @@ the user's roles' ``available_permissions``.
 
 .. code-block:: python
 
-    from rolepermissions.shortcuts import revoke_permission
+    from rolepermissions.permissions import revoke_permission
 
     revoke_permission(user, 'create_medical_record')
 
@@ -119,7 +122,7 @@ object, snake cased string representation or inside a list.
 
 .. code-block:: python
 
-    from rolepermissions.verifications import has_role
+    from rolepermissions.checkers import has_role
     from my_project.roles import Doctor
 
     if has_role(user, [Doctor, 'nurse']):
@@ -131,7 +134,7 @@ Receives a user and a permission and returns ``True`` is the user has ths specif
 
 .. code-block:: python
 
-    from rolepermissions.verifications import has_permission
+    from rolepermissions.checkers import has_permission
     from my_project.roles import Doctor
     from records.models import MedicalRecord
 
@@ -147,7 +150,7 @@ Receives a string referencing the object permission checker, a user and the obje
 
 .. code-block:: python
 
-    from rolepermissions.verifications import has_object_permission
+    from rolepermissions.checkers import has_object_permission
     from clinics.models import Clinic
 
     clinic = Clinic.objects.get(id=1)

@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+import inspect
+
 from six import add_metaclass
 
 from django.contrib.auth.models import Group, Permission
@@ -7,6 +9,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 
 from rolepermissions.utils import camelToSnake
+from rolepermissions.exceptions import RoleDoesNotExist
 
 
 registered_roles = {}
@@ -67,7 +70,7 @@ class AbstractUserRole(object):
         Get all true permissions for a user excluding ones that
         have been explicitly revoked.
         """
-        from rolepermissions.shortcuts import get_user_roles, available_perm_status
+        from rolepermissions.permissions import available_perm_status
 
         default_true_permissions = set()
         user_permission_states = available_perm_status(user)
@@ -167,3 +170,51 @@ class AbstractUserRole(object):
     @classmethod
     def get_default(cls, permission_name):
         return cls.available_permissions[permission_name]
+
+
+def retrieve_role(role_name):
+    """Get a Role object from a role name."""
+    return RolesManager.retrieve_role(role_name)
+
+
+def get_user_roles(user):
+    """Get a list of a users's roles."""
+    if user:
+        roles = user.groups.filter(
+            name__in=RolesManager.get_roles_names()).order_by("name")
+        return [RolesManager.retrieve_role(role.name) for role in roles]
+    else:
+        return []
+
+
+def _assign_or_remove_role(user, role, method_name):
+    role_cls = role
+    if not inspect.isclass(role):
+        role_cls = retrieve_role(role)
+
+    if not role_cls:
+        raise RoleDoesNotExist
+
+    getattr(role_cls, method_name)(user)
+
+    return role_cls
+
+
+def assign_role(user, role):
+    """Assign a role to a user."""
+    return _assign_or_remove_role(user, role, "assign_role_to_user")
+
+
+def remove_role(user, role):
+    """Remove a role from a user."""
+    return _assign_or_remove_role(user, role, "remove_role_from_user")
+
+
+def clear_roles(user):
+    """Remove all roles from a user."""
+    roles = get_user_roles(user)
+
+    for role in roles:
+        role.remove_role_from_user(user)
+
+    return roles
