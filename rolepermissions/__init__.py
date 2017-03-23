@@ -2,7 +2,7 @@ import django
 from distutils.version import StrictVersion
 
 
-__version__ = '2.0.0'
+__version__ = '2.0.1'
 
 
 try:
