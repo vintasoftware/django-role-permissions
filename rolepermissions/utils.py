@@ -1,10 +1,20 @@
 from __future__ import unicode_literals
 
 import re
+import collections
+
+
+def user_is_authenticated(user):
+    if isinstance(user.is_authenticated, collections.Callable):
+        authenticated = user.is_authenticated()
+    else:
+        authenticated = user.is_authenticated
+
+    return authenticated
 
 
 def camelToSnake(s):
-    """ 
+    """
     https://gist.github.com/jaytaylor/3660565
     Is it ironic that this function is written in camel case, yet it
     converts to snake case? hmm..
