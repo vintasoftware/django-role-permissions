@@ -6,6 +6,7 @@ from django.template import Context, Template
 from model_mommy import mommy
 
 from rolepermissions.roles import AbstractUserRole
+from rolepermissions.permissions import register_object_checker
 
 
 class TemRole1(AbstractUserRole):
@@ -28,17 +29,20 @@ class TemRole3(AbstractUserRole):
     }
 
 
-class HasRoleTests(TestCase):
-
-    def setUp(self):
-        self.user = mommy.make(get_user_model())
-
-        TemRole1.assign_role_to_user(self.user)
+class BaseTagTestCase(TestCase):
 
     def tag_test(self, template, context, output):
         t = Template('{% load permission_tags %}'+template)
         c = Context(context)
         self.assertEqual(t.render(c), output)
+
+
+class HasRoleTests(BaseTagTestCase):
+
+    def setUp(self):
+        self.user = mommy.make(get_user_model())
+
+        TemRole1.assign_role_to_user(self.user)
 
     def test_has_role_tag(self):
         user = self.user
@@ -70,6 +74,88 @@ class HasRoleTests(TestCase):
         user = self.user
 
         template = '{% if user|has_role:"tem_role2,tem_role3" %}passed{% endif %}'
+
+        context = {
+            'user': user,
+        }
+
+        output = ''
+
+        self.tag_test(template, context, output)
+
+
+class CanFilterTests(BaseTagTestCase):
+
+    def setUp(self):
+        self.user = mommy.make(get_user_model())
+
+        TemRole1.assign_role_to_user(self.user)
+
+    def test_can_see(self):
+        user = self.user
+
+        template = (
+            "{% if user|can:'permission1' %}passed{% endif %}")
+
+        context = {
+            'user': user,
+        }
+
+        output = 'passed'
+
+        self.tag_test(template, context, output)
+
+    def test_can_not_see(self):
+        user = self.user
+
+        template = (
+            "{% if user|can:'permission3' %}passed{% endif %}")
+
+        context = {
+            'user': user,
+        }
+
+        output = ''
+
+        self.tag_test(template, context, output)
+
+
+class CanTagTests(BaseTagTestCase):
+
+    def setUp(self):
+        self.user = mommy.make(get_user_model())
+
+        TemRole1.assign_role_to_user(self.user)
+
+    def test_can_print_stuff(self):
+        user = self.user
+
+        @register_object_checker()
+        def can_print_stuff(role, user, clinic):
+            return True
+
+        template = (
+            "{% can 'can_print_stuff' '' as can_print %}"
+            "{% if can_print %}passed{% endif %}")
+
+        context = {
+            'user': user,
+        }
+
+        output = 'passed'
+
+        self.tag_test(template, context, output)
+
+    def test_can_not_print_stuff(self):
+        user = self.user
+
+        @register_object_checker()
+        def can_print_stuff(role, user, clinic):
+            return False
+
+        template = (
+            "{% can 'can_print_stuff' '' as can_print %}"
+            "{% if can_print %}passed{% endif %}")
 
         context = {
             'user': user,
