@@ -27,6 +27,7 @@ def load_roles_and_permissions():
         if app_name is not 'rolepermissions':
             app_name = get_app_name(app_name)
             try:
+                import_module(app_name)
                 import_module('.permissions', app_name)
             except ImportError:
                 pass
