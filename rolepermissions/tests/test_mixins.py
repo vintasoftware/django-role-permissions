@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.test.client import RequestFactory
 from django.core.exceptions import PermissionDenied
 from django.http.response import HttpResponse
+from django.test.utils import override_settings
 
 from model_mommy import mommy
 
@@ -46,6 +47,17 @@ class MultipleHasRoleDetailView(HasRoleMixin, DetailView):
         return HttpResponse("Test")
 
 
+class RoleOverhiddenRedirectView(HasRoleMixin, DetailView):
+    allowed_roles = ['mix_role1', MixRole2]
+    redirect_to_login = False
+
+    def get_object(self):
+        return True
+
+    def render_to_response(self, context, **response_kwargs):
+        return HttpResponse("Test")
+
+
 class HasRoleDecoratorTests(TestCase):
 
     def setUp(self):
@@ -74,7 +86,7 @@ class HasRoleDecoratorTests(TestCase):
         MixRole2.assign_role_to_user(user)
 
         with self.assertRaises(PermissionDenied):
-            response = HasRoleDetailView.as_view()(request)
+            HasRoleDetailView.as_view()(request)
 
     def test_view_with_multiple_allowed_roles(self):
         user = self.user
@@ -92,12 +104,32 @@ class HasRoleDecoratorTests(TestCase):
 
         self.assertEquals(response.status_code, 200)
 
+    @override_settings(
+        ROLEPERMISSIONS_REDIRECT_TO_LOGIN=True, LOGIN_URL='/login/',
+        ROOT_URLCONF='rolepermissions.tests.mock_urls')
+    def test_overhidden_redirect_to_login(self):
+        request = self.request
+
+        with self.assertRaises(PermissionDenied):
+            RoleOverhiddenRedirectView.as_view()(request)
+
     def tearDown(self):
         RolesManager._roles = {}
 
 
 class HasPermissionDetailView(HasPermissionsMixin, DetailView):
     required_permission = 'permission2'
+
+    def get_object(self):
+        return True
+
+    def render_to_response(self, context, **response_kwargs):
+        return HttpResponse("Test")
+
+
+class PermissionOverhiddenRedirectView(HasPermissionsMixin, DetailView):
+    required_permission = 'permission2'
+    redirect_to_login = False
 
     def get_object(self):
         return True
@@ -134,7 +166,16 @@ class HasPermissionDecoratorTests(TestCase):
         MixRole2.assign_role_to_user(user)
 
         with self.assertRaises(PermissionDenied):
-            response = HasPermissionDetailView.as_view()(request)
+            HasPermissionDetailView.as_view()(request)
+
+    @override_settings(
+        ROLEPERMISSIONS_REDIRECT_TO_LOGIN=True, LOGIN_URL='/login/',
+        ROOT_URLCONF='rolepermissions.tests.mock_urls')
+    def test_overhidden_redirect_to_login(self):
+        request = self.request
+
+        with self.assertRaises(PermissionDenied):
+            PermissionOverhiddenRedirectView.as_view()(request)
 
     def tearDown(self):
         RolesManager._roles = {}

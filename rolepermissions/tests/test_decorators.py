@@ -114,6 +114,32 @@ class HasPermissionDetailView(DetailView):
         return HttpResponse("Test")
 
 
+class PermissionOverhiddenRedirectView(DetailView):
+
+    @method_decorator(has_permission_decorator('permission2', redirect_to_login=False))
+    def dispatch(self, request, *args, **kwargs):
+        return super(PermissionOverhiddenRedirectView, self).dispatch(request, *args, **kwargs)
+
+    def get_object(self):
+        return True
+
+    def render_to_response(self, context, **response_kwargs):
+        return HttpResponse("Test")
+
+
+class RoleOverhiddenRedirectView(DetailView):
+
+    @method_decorator(has_role_decorator('permission2', redirect_to_login=False))
+    def dispatch(self, request, *args, **kwargs):
+        return super(RoleOverhiddenRedirectView, self).dispatch(request, *args, **kwargs)
+
+    def get_object(self):
+        return True
+
+    def render_to_response(self, context, **response_kwargs):
+        return HttpResponse("Test")
+
+
 class HasPermissionDecoratorTests(TestCase):
 
     def setUp(self):
@@ -167,6 +193,12 @@ class RedirectToLoginTests(TestCase):
         self.assertEquals(response.status_code, 302)
         self.assertIn('/login/', response['Location'])
 
+    def test_permision_overhiding_setting(self):
+        request = self.request
+
+        with self.assertRaises(PermissionDenied):
+            PermissionOverhiddenRedirectView.as_view()(request)
+
     def test_role_redirects_to_login(self):
         request = self.request
 
@@ -174,6 +206,12 @@ class RedirectToLoginTests(TestCase):
 
         self.assertEquals(response.status_code, 302)
         self.assertIn('/login/', response['Location'])
+
+    def test_role_overhiding_setting(self):
+        request = self.request
+
+        with self.assertRaises(PermissionDenied):
+            RoleOverhiddenRedirectView.as_view()(request)
 
 
 @override_settings(
