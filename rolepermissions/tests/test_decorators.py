@@ -174,3 +174,30 @@ class RedirectToLoginTests(TestCase):
 
         self.assertEquals(response.status_code, 302)
         self.assertIn('/login/', response['Location'])
+
+
+@override_settings(
+    ROLEPERMISSIONS_REDIRECT_TO_LOGIN=False, LOGIN_URL='/login/',
+    ROOT_URLCONF='rolepermissions.tests.mock_urls')
+class NotRedirectToLoginTests(TestCase):
+
+    def setUp(self):
+        self.user = mommy.make(get_user_model())
+
+        self.factory = RequestFactory()
+
+        self.request = self.factory.get('/')
+        self.request.session = {}
+        self.request.user = self.user
+
+    def test_permission_does_not_redirects_to_login(self):
+        request = self.request
+
+        with self.assertRaises(PermissionDenied):
+            HasPermissionDetailView.as_view()(request)
+
+    def test_role_does_not_redirects_to_login(self):
+        request = self.request
+
+        with self.assertRaises(PermissionDenied):
+            HasRoleDetailView.as_view()(request)

@@ -18,7 +18,7 @@ def has_role_decorator(role):
             if user_is_authenticated(user):
                 if has_role(user, role):
                     return dispatch(request, *args, **kwargs)
-            if hasattr(settings, 'ROLEPERMISSIONS_REDIRECT_TO_LOGIN'):
+            if getattr(settings, 'ROLEPERMISSIONS_REDIRECT_TO_LOGIN', False):
                 return redirect_to_login(request.get_full_path())
             raise PermissionDenied
         return wrapper
@@ -33,7 +33,7 @@ def has_permission_decorator(permission_name):
             if user_is_authenticated(user):
                 if has_permission(user, permission_name):
                     return dispatch(request, *args, **kwargs)
-            if hasattr(settings, 'ROLEPERMISSIONS_REDIRECT_TO_LOGIN'):
+            if getattr(settings, 'ROLEPERMISSIONS_REDIRECT_TO_LOGIN', False):
                 return redirect_to_login(request.get_full_path())
             raise PermissionDenied
         return wrapper
