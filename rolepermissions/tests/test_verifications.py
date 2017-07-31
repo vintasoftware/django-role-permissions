@@ -124,3 +124,8 @@ class HasObjectPermissionTests(TestCase):
         user = self.user
 
         self.assertFalse(has_object_permission('obj_checker', user, False))
+
+    def test_check_none_role_if_user_has_no_role(self):
+        user = mommy.make(get_user_model())
+
+        self.assertTrue(has_object_permission('obj_checker', user, True))

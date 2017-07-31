@@ -44,4 +44,7 @@ def has_object_permission(checker_name, user, obj):
     checker = PermissionsManager.retrieve_checker(checker_name)
     user_roles = get_user_roles(user)
 
+    if not user_roles:
+        user_roles = [None]
+
     return any([checker(user_role, user, obj) for user_role in user_roles])
