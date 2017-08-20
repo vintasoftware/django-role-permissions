@@ -161,7 +161,7 @@ class AbstractUserRole(object):
         if len(permissions) != len(permission_names):
             for permission_name in permission_names:
                 permission, created = Permission.objects.get_or_create(
-                    content_type=user_ct, codename=permission_name)
+                    content_type=user_ct, codename=permission_name, name=permission_name)
                 if created:
                     permissions.append(permission)
 
