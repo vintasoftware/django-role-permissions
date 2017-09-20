@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 
 from rolepermissions.exceptions import (
     RolePermissionScopeException, CheckerNotRegistered)
-from rolepermissions.roles import get_user_roles
+from rolepermissions.roles import get_user_roles, get_or_create_permission
 
 
 class PermissionsManager(object):
@@ -37,9 +37,7 @@ def register_object_checker(name=None):
 
 def get_permission(permission_name):
     """Get a Permission object from a permission name."""
-    user_ct = ContentType.objects.get_for_model(get_user_model())
-    permission, _created = Permission.objects.get_or_create(
-        content_type=user_ct, codename=permission_name)
+    permission, created = get_or_create_permission(permission_name)
 
     return permission
 

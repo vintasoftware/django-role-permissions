@@ -29,6 +29,11 @@ class RolRole3(AbstractUserRole):
         'permission6': False,
     }
 
+class RolRole4(AbstractUserRole):
+    available_permissions = {
+        'permission_number_7': True,
+        'PermissionNumber8': True,
+    }
 
 class AbstractUserRoleTests(TestCase):
 
@@ -129,6 +134,18 @@ class AbstractUserRoleTests(TestCase):
 
         self.assertIn('permission3', RolRole2.permission_names_list())
         self.assertIn('permission4', RolRole2.permission_names_list())
+
+    def test_permission_labels(self):
+        user = mommy.make(get_user_model())
+
+        RolRole4.assign_role_to_user(user)
+        permissions = user.user_permissions.all()
+
+        permission_labels = [perm.name for perm in permissions]
+
+        self.assertIn('Permission Number 7', permission_labels)
+        self.assertIn('Permission Number8', permission_labels)
+        self.assertEquals(len(permissions), 2)
 
 
 class RolesManagerTests(TestCase):
