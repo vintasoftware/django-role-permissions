@@ -29,6 +29,10 @@ class RolesManager(object):
     def get_roles_names(cls):
         return registered_roles.keys()
 
+    @classmethod
+    def get_roles(cls):
+        return registered_roles.values()
+
 
 class RolesClassRegister(type):
 
