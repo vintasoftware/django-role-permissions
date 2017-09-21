@@ -15,7 +15,7 @@ requirements = [
     'six',
 ]
 test_requirements = [
-    'model-mommy==1.2.1',
+    'model-mommy==1.3.1',
     'mock'
 ]
 
