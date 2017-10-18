@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 
 from model_mommy import mommy
 
-from rolepermissions.roles import RolesManager, AbstractUserRole
+from rolepermissions.roles import RolesManager, AbstractUserRole, get_or_create_permission
 
 
 class RolRole1(AbstractUserRole):
@@ -156,3 +156,36 @@ class RolesManagerTests(TestCase):
     def test_retrieve_role(self):
         self.assertEquals(RolesManager.retrieve_role('rol_role1'), RolRole1)
         self.assertEquals(RolesManager.retrieve_role('rol_role2'), RolRole2)
+
+
+class GetOrCreatePermissionsTests(TestCase):
+
+    def setUp(self):
+        pass
+
+    def test_create_default_named_permission(self):
+        perm_snake, _created = get_or_create_permission("my_perm_name1")
+        self.assertEqual(perm_snake.name, "My Perm Name1")
+
+        perm_camel, _created = get_or_create_permission("myPermName2")
+        self.assertEqual(perm_camel.name, "My Perm Name2")
+
+    def test_create_and_get_named_permission(self) :
+        perm1, _created = get_or_create_permission("my_perm_name", name="My Custom Name")
+        self.assertEqual(perm1.name, "My Custom Name")
+
+        perm2, _created = get_or_create_permission("my_perm_name", name="My Custom Name")
+        self.assertEqual(perm1, perm2)
+
+    def test_create_and_get_specialty_named_permission(self) :
+        def name_perm(codename):
+            return "Custom-"+codename
+        perm, _created = get_or_create_permission("my_perm_name", name_perm)
+        self.assertEqual(perm.name, "Custom-my_perm_name")
+
+    def test_backwards_compat_with_unnamed_permission(self) :
+        unnamed_perm, _created = get_or_create_permission("my_perm_name", name="")
+        self.assertEqual(unnamed_perm.name, "")
+
+        perm, _created = get_or_create_permission("my_perm_name")
+        self.assertEqual(unnamed_perm, perm)

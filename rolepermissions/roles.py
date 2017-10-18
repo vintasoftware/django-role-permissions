@@ -176,11 +176,19 @@ class AbstractUserRole(object):
         return cls.available_permissions[permission_name]
 
 
-def get_or_create_permission(permission_name):
-    """Get a Permission object from a permission name."""
+def get_or_create_permission(codename, name=camel_or_snake_to_title):
+    """
+    Get a Permission object from a permission name.
+    @:param codename: permission code name
+    @:param name: human-readable permissions name (str) or callable that takes codename as argument and returns str
+    """
     user_ct = ContentType.objects.get_for_model(get_user_model())
-    return Permission.objects.get_or_create(
-            content_type=user_ct, codename=permission_name, name=camel_or_snake_to_title(permission_name))
+    # Careful here - don't use name to lookup existing permissions
+    try:
+        return Permission.objects.get(content_type=user_ct, codename=codename), False
+    except Permission.DoesNotExist:
+        perm_name = name(codename) if callable(name) else name
+        return Permission.objects.create(content_type=user_ct, codename=codename, name=perm_name), True
 
 
 def retrieve_role(role_name):

@@ -69,7 +69,7 @@ class SyncRolesTest(TestCase):
         user.groups.add(grp1)
         user.groups.add(grp2)
         out = StringIO()
-        call_command('sync_roles', stdout=out)
+        call_command('sync_roles', reset_user_permissions=True, stdout=out)
 
         user_group_names = [group['name'] for group in user.groups.all().values('name')]
         self.assertIn(grp1.name, user_group_names)
