@@ -17,6 +17,7 @@ Contents:
    object_permissions
    utils
    views_utils
+   admin
    settings
 
 
