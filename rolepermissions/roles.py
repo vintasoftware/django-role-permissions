@@ -126,7 +126,7 @@ class AbstractUserRole(object):
         # Grab the adjusted true permissions before the removal
         current_adjusted_true_permissions = cls._get_adjusted_true_permissions(user)
 
-        group, _created = Group.objects.get_or_create(name=cls.get_name())
+        group, _created = cls.get_or_create_group()
         user.groups.remove(group)
 
         # Grab the adjusted true permissions after the removal
@@ -175,6 +175,10 @@ class AbstractUserRole(object):
     def get_default(cls, permission_name):
         return cls.available_permissions[permission_name]
 
+    @classmethod
+    def get_or_create_group(cls):
+        return Group.objects.get_or_create(name=cls.get_name())
+
 
 def get_or_create_permission(codename, name=camel_or_snake_to_title):
     """
@@ -183,13 +187,8 @@ def get_or_create_permission(codename, name=camel_or_snake_to_title):
     @:param name: human-readable permissions name (str) or callable that takes codename as argument and returns str
     """
     user_ct = ContentType.objects.get_for_model(get_user_model())
-    # Careful here - don't use name to lookup existing permissions
-    try:
-        return Permission.objects.get(content_type=user_ct, codename=codename), False
-    except Permission.DoesNotExist:
-        perm_name = name(codename) if callable(name) else name
-        return Permission.objects.create(content_type=user_ct, codename=codename, name=perm_name), True
-
+    return Permission.objects.get_or_create(content_type=user_ct, codename=codename,
+                                            defaults={'name':name(codename) if callable(name) else name})
 
 def retrieve_role(role_name):
     """Get a Role object from a role name."""

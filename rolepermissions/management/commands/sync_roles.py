@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from rolepermissions import roles
 
@@ -26,7 +25,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # Sync auth.Group with current registered roles (leaving existing groups intact!)
         for role in roles.RolesManager.get_roles() :
-            group, created = Group.objects.get_or_create(name=role.get_name())
+            group, created = role.get_or_create_group()
             if created:
                 self.stdout.write("Created Group: %s from Role: %s"%(group.name, role.get_name()))
             # Sync auth.Permission with permissions for this role
