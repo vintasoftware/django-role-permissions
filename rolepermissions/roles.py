@@ -184,11 +184,13 @@ def get_or_create_permission(codename, name=camel_or_snake_to_title):
     """
     Get a Permission object from a permission name.
     @:param codename: permission code name
-    @:param name: human-readable permissions name (str) or callable that takes codename as argument and returns str
+    @:param name: human-readable permissions name (str) or callable that takes codename as
+                  argument and returns str
     """
     user_ct = ContentType.objects.get_for_model(get_user_model())
     return Permission.objects.get_or_create(content_type=user_ct, codename=codename,
-                                            defaults={'name':name(codename) if callable(name) else name})
+                                            defaults={'name': name(codename) if callable(name) else name})
+
 
 def retrieve_role(role_name):
     """Get a Role object from a role name."""

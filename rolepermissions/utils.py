@@ -26,8 +26,9 @@ def camelToSnake(s):
     return _underscorer2.sub(r'\1_\2', subbed).lower()
 
 
-def snake_to_title(s) :
+def snake_to_title(s):
     return ' '.join(x.capitalize() for x in s.split('_'))
+
 
 def camel_or_snake_to_title(s):
     return snake_to_title(camelToSnake(s))

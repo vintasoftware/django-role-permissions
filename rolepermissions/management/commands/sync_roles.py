@@ -6,7 +6,7 @@ from rolepermissions import roles
 
 class Command(BaseCommand):
     ROLEPERMISSIONS_MODULE = getattr(settings, 'ROLEPERMISSIONS_MODULE', 'roles.py')
-    help = "Synchronize auth Groups and Permissions with UserRoles defined in %s."%ROLEPERMISSIONS_MODULE
+    help = "Synchronize auth Groups and Permissions with UserRoles defined in %s." % ROLEPERMISSIONS_MODULE
     version = "1.0.0"
 
     def get_version(self):
@@ -24,10 +24,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Sync auth.Group with current registered roles (leaving existing groups intact!)
-        for role in roles.RolesManager.get_roles() :
+        for role in roles.RolesManager.get_roles():
             group, created = role.get_or_create_group()
             if created:
-                self.stdout.write("Created Group: %s from Role: %s"%(group.name, role.get_name()))
+                self.stdout.write("Created Group: %s from Role: %s" % (group.name, role.get_name()))
             # Sync auth.Permission with permissions for this role
             role.get_default_true_permissions()
 

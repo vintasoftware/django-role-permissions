@@ -18,7 +18,7 @@ class RolePermissionsUserAdminMixin(object):
         new_user_groups = set(g.name for g in user.groups.all())
 
         for role_name in (old_user_roles - new_user_groups):  # roles removed from User's groups
-            try: # put the recently removed group back, let rolepermissions remove it...
+            try:  # put the recently removed group back, let rolepermissions remove it...
                 group = Group.objects.get(name=role_name)
                 user.groups.add(group)
             except Group.DoesNotExist:
@@ -34,6 +34,7 @@ class RolePermissionsUserAdminMixin(object):
 
 class RolePermissionsUserAdmin(RolePermissionsUserAdminMixin, UserAdmin):
     pass
+
 
 if ROLEPERMISSIONS_REGISTER_ADMIN:
     admin.site.unregister(UserModel)

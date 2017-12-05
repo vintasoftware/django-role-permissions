@@ -19,9 +19,11 @@ class AdminRole1(AbstractUserRole):
 
 
 class UserAdminMixinTest(TestCase):
+
     class UserAdminMock:
-        def save_related(self, request, form, formsets, change) :
+        def save_related(self, request, form, formsets, change):
             pass
+
     class CustomUserAdminMock(RolePermissionsUserAdminMixin, UserAdminMock):
         pass
 
@@ -51,7 +53,7 @@ class SyncRolesTest(TestCase):
     def test_sync_group(self):
         out = StringIO()
         call_command('sync_roles', stdout=out)
-        self.assertIn('Created Group: %s'%AdminRole1.get_name(), out.getvalue())
+        self.assertIn('Created Group: %s' % AdminRole1.get_name(), out.getvalue())
         group_names = [group['name'] for group in Group.objects.all().values('name')]
         self.assertIn(AdminRole1.get_name(), group_names)
 
@@ -87,5 +89,3 @@ class SyncRolesTest(TestCase):
         group_names = [group['name'] for group in Group.objects.all().values('name')]
         self.assertIn(grp1.name, group_names)
         self.assertIn(grp2.name, group_names)
-
-

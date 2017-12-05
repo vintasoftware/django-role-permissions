@@ -1,9 +1,5 @@
 from __future__ import unicode_literals
 
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import Permission
-from django.contrib.auth import get_user_model
-
 from rolepermissions.exceptions import (
     RolePermissionScopeException, CheckerNotRegistered)
 from rolepermissions.roles import get_user_roles, get_or_create_permission
