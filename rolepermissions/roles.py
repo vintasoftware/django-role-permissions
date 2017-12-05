@@ -8,7 +8,7 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 
-from rolepermissions.utils import camelToSnake
+from rolepermissions.utils import camelToSnake, camel_or_snake_to_title
 from rolepermissions.exceptions import RoleDoesNotExist
 
 
@@ -28,6 +28,10 @@ class RolesManager(object):
     @classmethod
     def get_roles_names(cls):
         return registered_roles.keys()
+
+    @classmethod
+    def get_roles(cls):
+        return registered_roles.values()
 
 
 class RolesClassRegister(type):
@@ -122,7 +126,7 @@ class AbstractUserRole(object):
         # Grab the adjusted true permissions before the removal
         current_adjusted_true_permissions = cls._get_adjusted_true_permissions(user)
 
-        group, _created = Group.objects.get_or_create(name=cls.get_name())
+        group, _created = cls.get_or_create_group()
         user.groups.remove(group)
 
         # Grab the adjusted true permissions after the removal
@@ -158,11 +162,11 @@ class AbstractUserRole(object):
         permissions = list(Permission.objects.filter(
             content_type=user_ct, codename__in=permission_names).all())
 
-        if len(permissions) != len(permission_names):
-            for permission_name in permission_names:
-                permission, created = Permission.objects.get_or_create(
-                    content_type=user_ct, codename=permission_name)
-                if created:
+        missing_permissions = set(permission_names) - set((p.codename for p in permissions))
+        if len(missing_permissions) > 0:
+            for permission_name in missing_permissions:
+                permission, created = get_or_create_permission(permission_name)
+                if created:  # assert created is True
                     permissions.append(permission)
 
         return permissions
@@ -171,6 +175,20 @@ class AbstractUserRole(object):
     def get_default(cls, permission_name):
         return cls.available_permissions[permission_name]
 
+    @classmethod
+    def get_or_create_group(cls):
+        return Group.objects.get_or_create(name=cls.get_name())
+
+
+def get_or_create_permission(codename, name=camel_or_snake_to_title):
+    """
+    Get a Permission object from a permission name.
+    @:param codename: permission code name
+    @:param name: human-readable permissions name (str) or callable that takes codename as argument and returns str
+    """
+    user_ct = ContentType.objects.get_for_model(get_user_model())
+    return Permission.objects.get_or_create(content_type=user_ct, codename=codename,
+                                            defaults={'name':name(codename) if callable(name) else name})
 
 def retrieve_role(role_name):
     """Get a Role object from a role name."""

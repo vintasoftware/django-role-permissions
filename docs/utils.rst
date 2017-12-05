@@ -25,6 +25,8 @@ Assigns a role to the user. Role parameter can be passed as string or role class
 
     assign_role(user, 'doctor')
 
+.. _remove-role:
+
 .. function:: remove_role(user, role)
 
 Removes a role from a user. Role parameter can be passed as string or role class object.
