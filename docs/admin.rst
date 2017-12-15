@@ -27,7 +27,7 @@ Assign / remove roles when editing Users in the Django User Admin Site.
 
 .. function:: RolePermissionsUserAdmin
 
-    Custom ``django.contrib.auth.admin.UserAdmin`` that essentially adds the following logic:
+    Custom ``django.contrib.auth.admin.UserAdmin`` that essentially adds the following logic. To be used with standard django User model:
 
     * ``remove_role(user, group)`` is called for each Group, removed via the Admin, that represents a role.
     * ``assign_role(user, group)`` is called for each Group, added via the Admin, that represents a role.
@@ -36,7 +36,7 @@ Assign / remove roles when editing Users in the Django User Admin Site.
 
 .. function:: RolePermissionsUserAdminMixin
 
-    Mixin the functionality of ``RolePermissionsUserAdmin`` to your own custom ``UserAdmin`` class
+    Mixin the functionality of ``RolePermissionsUserAdmin`` to your own custom ``UserAdmin`` class. To be used with custom User model:
 
 
     .. code-block:: python
