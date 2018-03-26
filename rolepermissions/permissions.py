@@ -43,16 +43,9 @@ def available_perm_status(user):
     Get a boolean map of the permissions available to a user
     based on that user's roles.
     """
-    roles = get_user_roles(user)
     permission_hash = {}
-
-    for role in roles:
-        permission_names = role.permission_names_list()
-
-        for permission_name in permission_names:
-            permission_hash[permission_name] = get_permission(
-                permission_name) in user.user_permissions.all()
-
+    for perm in user.user_permissions.all():
+        permission_hash[(perm.name).lower().replace(" ", "_")] = True
     return permission_hash
 
 
