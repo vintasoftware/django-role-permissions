@@ -6,7 +6,7 @@
 
 ``django-role-permissions`` is a django app for role based permissions. It's built on top of django ``contrib.auth`` user ```Group``` and ``Permission`` functionalities and it does not add any other models to your project.  
 
-``django-role-permissions`` supports Django versions from 1.5 till the lattest. 
+``django-role-permissions`` supports Django versions from 1.5 till the latest. 
 
 Version 2.x now supports multiple roles!
 
@@ -22,7 +22,7 @@ If you are still using an 1.x version the old documentation is at:
 
 ## Version 1.x support
 
-No new features will be added to version 1.x neither it's going to be officially supported. Although, there's a [1.x](https://github.com/vintasoftware/django-role-permissions/tree/1.x) branch. PRs and bug fixes are welcome there and we may push new versions to PyPI.
+No new features will be added to version 1.x, neither is it going to be officially supported. Although, there's a [1.x](https://github.com/vintasoftware/django-role-permissions/tree/1.x) branch. PRs and bug fixes are welcome there and we may push new versions to PyPI.
 
 ## 2.x release notes
 
