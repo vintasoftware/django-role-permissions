@@ -18,6 +18,13 @@ class AdminRole1(AbstractUserRole):
     }
 
 
+class AdminRole2(AbstractUserRole):
+    available_permissions = {
+        'admin2_perm1': True,
+        'admin2_perm2': True
+    }
+
+
 class UserAdminMixinTest(TestCase):
 
     class UserAdminMock:
@@ -56,6 +63,12 @@ class SyncRolesTest(TestCase):
         self.assertIn('Created Group: %s' % AdminRole1.get_name(), out.getvalue())
         group_names = [group['name'] for group in Group.objects.all().values('name')]
         self.assertIn(AdminRole1.get_name(), group_names)
+
+    def test_sync_group_include_permission(self):
+        call_command('sync_roles')
+        group = Group.objects.get(name=AdminRole2.get_name())
+        permission_names = [permission.codename for permission in group.permissions.all()]
+        self.assertEqual(set(AdminRole2.permission_names_list()), set(permission_names))
 
     def test_sync_permissions(self):
         out = StringIO()

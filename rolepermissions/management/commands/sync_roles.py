@@ -7,7 +7,7 @@ from rolepermissions import roles
 class Command(BaseCommand):
     ROLEPERMISSIONS_MODULE = getattr(settings, 'ROLEPERMISSIONS_MODULE', 'roles.py')
     help = "Synchronize auth Groups and Permissions with UserRoles defined in %s." % ROLEPERMISSIONS_MODULE
-    version = "1.0.0"
+    version = "1.0.1"
 
     def get_version(self):
         return self.version
@@ -30,6 +30,9 @@ class Command(BaseCommand):
                 self.stdout.write("Created Group: %s from Role: %s" % (group.name, role.get_name()))
             # Sync auth.Permission with permissions for this role
             role.get_default_true_permissions()
+            permissions = role.get_available_permissions()
+            group.permissions.add(*permissions)
+            group.save()
 
         if options.get('reset_user_permissions', False):  # dj1.7 compat
             # Push any permission changes made to roles and remove any unregistered roles from all auth.Users
