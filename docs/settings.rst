@@ -18,8 +18,8 @@ Add the following variable to your django ``settings.py``:
 
 .. _register-user-admin-setting:
 
-Regiser User Admin
-==================
+Register User Admin
+===================
 
 Replaces the default ``django.contrib.auth.admin.UserAdmin`` with :ref:`RolePermissionsUserAdmin <rolepermissions-useradmin>`
 so you can manange roles interactively via the Django User Admin Site.
