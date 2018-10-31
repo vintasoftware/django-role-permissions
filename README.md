@@ -6,7 +6,7 @@
 
 ``django-role-permissions`` is a django app for role based permissions. It's built on top of django ``contrib.auth`` user ```Group``` and ``Permission`` functionalities and it does not add any other models to your project.  
 
-``django-role-permissions`` supports Django versions from 1.5 till the latest. 
+``django-role-permissions`` supports Django versions from 1.5 till the latest.
 
 Version 2.x now supports multiple roles!
 
@@ -46,5 +46,9 @@ To run tests, install tox and run it in the command line from this project folde
 If you have any questions or need help, please send an email to: contact@vinta.com.br
 
 ## Commercial Support
+[![alt text](https://avatars2.githubusercontent.com/u/5529080?s=200&v=4 "Vinta Logo")](https://vintasoftware.com)
 
 This project, as other Vinta open-source projects, is used in products of Vinta clients. We are always looking for exciting work, so if you need any commercial support, feel free to get in touch: contact@vinta.com.br
+
+Copyright (c) 2018 Vinta Serviços e Soluções Tecnológicas Ltda.
+[MIT License](LICENSE.txt)
