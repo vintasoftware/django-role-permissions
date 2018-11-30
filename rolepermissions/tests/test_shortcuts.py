@@ -1,6 +1,7 @@
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 
 from model_mommy import mommy
 
@@ -384,6 +385,12 @@ class GetUserRoleTests(TestCase):
     def setUp(self):
         self.user = mommy.make(get_user_model())
 
+    def test_returns_list(self) :
+        user = self.user
+
+        user_roles = get_user_roles(user)
+        self.assertEquals(type(user_roles), type([]))
+
     def test_get_user_roles(self):
         user = self.user
 
@@ -413,6 +420,41 @@ class GetUserRoleTests(TestCase):
         assign_role(user, ShoRole3)
 
         self.assertListEqual([ShoRole3, ShoRole1, ShoRole2, ShoRole4], get_user_roles(user))
+
+    def test_dont_return_non_role_groups(self):
+        user = self.user
+
+        assign_role(user, ShoRole1)
+        assign_role(user, ShoRole2)
+        assign_role(user, ShoRole3)
+        assign_role(user, ShoRole4)
+
+        other_group = mommy.make(Group)
+        user.groups.add(other_group)
+
+        self.assertNotIn(other_group, get_user_roles(user))
+
+    def test_queries_no_prefetch(self):
+        user = self.user
+
+        assign_role(user, ShoRole1)
+        assign_role(user, ShoRole2)
+        assign_role(user, ShoRole3)
+
+        fetched_user = get_user_model().objects.get(pk=self.user.pk)
+        with self.assertNumQueries(1):
+            user_roles = get_user_roles(fetched_user)
+
+    def test_queries_with_prefetch(self):
+        user = self.user
+
+        assign_role(user, ShoRole1)
+        assign_role(user, ShoRole2)
+        assign_role(user, ShoRole3)
+
+        fetched_user = get_user_model().objects.prefetch_related('groups').get(pk=self.user.pk)
+        with self.assertNumQueries(0):
+            user_roles = get_user_roles(fetched_user)
 
     def tearDown(self):
         RolesManager._roles = {}
