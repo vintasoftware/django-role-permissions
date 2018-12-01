@@ -12,7 +12,7 @@ from rolepermissions.roles import (
 )
 from rolepermissions.permissions import (
     grant_permission, revoke_permission,
-    available_perm_status)
+    available_perm_status, available_perm_names)
 from rolepermissions.checkers import has_permission
 from rolepermissions.exceptions import (
     RoleDoesNotExist, RolePermissionScopeException)
@@ -442,8 +442,10 @@ class GetUserRoleTests(TestCase):
         assign_role(user, ShoRole3)
 
         fetched_user = get_user_model().objects.get(pk=self.user.pk)
-        with self.assertNumQueries(1):
-            user_roles = get_user_roles(fetched_user)
+        N = 3
+        with self.assertNumQueries(N):  # One query (fetch roles) per call
+            for i in range(N):
+                user_roles = get_user_roles(fetched_user)
 
     def test_queries_with_prefetch(self):
         user = self.user
@@ -453,8 +455,10 @@ class GetUserRoleTests(TestCase):
         assign_role(user, ShoRole3)
 
         fetched_user = get_user_model().objects.prefetch_related('groups').get(pk=self.user.pk)
-        with self.assertNumQueries(0):
-            user_roles = get_user_roles(fetched_user)
+        N = 3
+        with self.assertNumQueries(0):  # all data required is cached with fetched_user
+            for i in range(N):
+                user_roles = get_user_roles(fetched_user)
 
     def tearDown(self):
         RolesManager._roles = {}
@@ -494,6 +498,51 @@ class AvailablePermStatusTests(TestCase):
 
         self.assertFalse(perm_hash['permission3'])
         self.assertFalse(perm_hash['permission4'])
+
+
+class AvailablePermNamesTests(TestCase):
+
+    def assert_available_perm_names_equals_available_perm_status(self):
+        perm_hash = available_perm_status(self.user)
+        perm_names = available_perm_names(self.user)
+
+        self.assertEqual( set(perm_names), set(p for p, has_perm in perm_hash.items() if has_perm) )
+
+    def setUp(self):
+        self.user = mommy.make(get_user_model())
+        self.user_role = ShoRole2.assign_role_to_user(self.user)
+
+    def test_permission_names(self):
+        self.assert_available_perm_names_equals_available_perm_status()
+
+    def test_permission_names_multiple_groups(self):
+        """
+        If a user has a permission in any role, that permission should show as True,
+        no matter what other roles dictate.
+        """
+        ShoRole1.assign_role_to_user(self.user)
+        ShoRole4.assign_role_to_user(self.user)
+
+        self.assert_available_perm_names_equals_available_perm_status()
+
+    def test_permission_names_after_modification(self):
+        revoke_permission(self.user, 'permission3')
+
+        self.assert_available_perm_names_equals_available_perm_status()
+
+    def test_queries_no_prefetch(self):
+        fetched_user = get_user_model().objects.get(pk=self.user.pk)
+        N = 3
+        with self.assertNumQueries(2 * N):  # Two query (fetch roles, fetch permissions) per call
+            for i in range(N):
+                perm_names = available_perm_names(fetched_user)
+
+    def test_queries_with_prefetch(self):
+        fetched_user = get_user_model().objects.prefetch_related('groups', 'user_permissions').get(pk=self.user.pk)
+        N = 3
+        with self.assertNumQueries(0):  # all data required is cached with fetched_user
+            for i in range(N):
+                perm_names = available_perm_names(fetched_user)
 
 
 class GrantPermissionTests(TestCase):
