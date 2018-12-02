@@ -32,10 +32,15 @@ if dj_version >= LooseVersion('1.5') and dj_version < LooseVersion('1.6'):
 
 SECRET_KEY = 'abcde12345'
 
-if dj_version >= LooseVersion('1.7'):
+if dj_version >= LooseVersion('1.7') and dj_version < LooseVersion('2.0'):
     MIDDLEWARE_CLASSES = (
         'django.middleware.common.CommonMiddleware',
-        'django.middleware.csrf.CsrfViewMiddleware'
+        'django.middleware.csrf.CsrfViewMiddleware',
+    )
+elif dj_version >= LooseVersion('2.0'):
+    MIDDLEWARE = (
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
     )
 
 if dj_version >= LooseVersion('1.8'):
