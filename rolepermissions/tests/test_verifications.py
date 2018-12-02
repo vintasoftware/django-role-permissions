@@ -103,6 +103,20 @@ class HasPermissionTests(TestCase):
     def test_none_user_param(self):
         self.assertFalse(has_permission(None, 'ver_role1'))
 
+    def test_queries_no_prefetch(self):
+        fetched_user = get_user_model().objects.get(pk=self.user.pk)
+        N = 3
+        with self.assertNumQueries(2 * N):  # Two query (fetch roles, fetch permissions) per call
+            for i in range(N):
+                has_permission(fetched_user, 'permission1')
+
+    def test_queries_with_prefetch(self):
+        fetched_user = get_user_model().objects.prefetch_related('groups', 'user_permissions').get(pk=self.user.pk)
+        N = 3
+        with self.assertNumQueries(0):  # all data required is cached with fetched_user
+            for i in range(N):
+                has_permission(fetched_user, 'permission1')
+
 
 class HasObjectPermissionTests(TestCase):
 

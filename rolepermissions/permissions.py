@@ -56,6 +56,20 @@ def available_perm_status(user):
     return permission_hash
 
 
+def available_perm_names(user):
+    """
+    Return a list of permissions codenames available to a user, based on that user's roles.
+      i.e., keys for all "True" permissions from available_perm_status(user):
+       Assert: set(available_perm_names(user)) == set(perm for perm,has_perm in available_perm_status(user) if has_perm)
+       Query efficient; especially when prefetch_related('group', 'user_permissions') on user object.
+       No side-effects; permissions are not created in DB as side-effect.
+    """
+    roles = get_user_roles(user)
+    perm_names = set(p for role in roles for p in role.permission_names_list())
+    return [p.codename for p in user.user_permissions.all() if p.codename in perm_names] \
+                                                                        if roles else []  # e.g., user == None
+
+
 def grant_permission(user, permission_name):
     """
     Grant a user a specified permission.

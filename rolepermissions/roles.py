@@ -200,9 +200,9 @@ def retrieve_role(role_name):
 def get_user_roles(user):
     """Get a list of a users's roles."""
     if user:
-        roles = user.groups.filter(
-            name__in=RolesManager.get_roles_names()).order_by("name")
-        return [RolesManager.retrieve_role(role.name) for role in roles]
+        groups = user.groups.all()   # Important! all() query may be cached on User with prefetch_related.
+        roles = (RolesManager.retrieve_role(group.name) for group in groups if group.name in RolesManager.get_roles_names())
+        return sorted(roles, key=lambda r: r.get_name() )
     else:
         return []
 

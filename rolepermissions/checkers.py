@@ -5,7 +5,7 @@ import inspect
 from rolepermissions.roles import (
     RolesManager, get_user_roles)
 from rolepermissions.permissions import (
-    PermissionsManager, available_perm_status)
+    PermissionsManager, available_perm_names)
 
 
 def has_role(user, roles):
@@ -33,8 +33,7 @@ def has_permission(user, permission_name):
     if user and user.is_superuser:
         return True
 
-    return available_perm_status(user).get(permission_name, False)
-
+    return permission_name in available_perm_names(user)
 
 def has_object_permission(checker_name, user, obj):
     """Check if a user has permission to perform an action on an object."""
