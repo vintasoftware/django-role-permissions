@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from rolepermissions.exceptions import (
     RolePermissionScopeException, CheckerNotRegistered)
-from rolepermissions.roles import get_user_roles, get_or_create_permission
+from rolepermissions.roles import get_user_roles, get_or_create_permission, _clear_user_available_perm_names
 
 
 class PermissionsManager(object):
@@ -64,6 +64,9 @@ def available_perm_names(user):
        Query efficient; especially when prefetch_related('group', 'user_permissions') on user object.
        No side-effects; permissions are not created in DB as side-effect.
     """
+    if user is None:
+        return []
+
     try:
         return user._available_perm_names
 
@@ -87,6 +90,7 @@ def grant_permission(user, permission_name):
     a RolePermissionScopeException is raised.
     """
     roles = get_user_roles(user)
+    _clear_user_available_perm_names(user)
 
     for role in roles:
         if permission_name in role.permission_names_list():
@@ -108,6 +112,7 @@ def revoke_permission(user, permission_name):
     is raised.
     """
     roles = get_user_roles(user)
+    _clear_user_available_perm_names(user)
 
     for role in roles:
         if permission_name in role.permission_names_list():

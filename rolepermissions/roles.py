@@ -223,6 +223,8 @@ def _assign_or_remove_role(user, role, method_name):
         raise RoleDoesNotExist
 
     getattr(role_cls, method_name)(user)
+    _clear_user_roles_cache(user)
+    _clear_user_available_perm_names(user)
 
     return role_cls
 
@@ -243,5 +245,21 @@ def clear_roles(user):
 
     for role in roles:
         role.remove_role_from_user(user)
+    _clear_user_roles_cache(user)
+    _clear_user_available_perm_names(user)
 
     return roles
+
+
+def _clear_user_roles_cache(user):
+    try:
+        delattr(user, '_user_roles')
+    except AttributeError:
+        pass
+
+
+def _clear_user_available_perm_names(user):
+    try:
+        delattr(user, '_available_perm_names')
+    except AttributeError:
+        pass

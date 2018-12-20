@@ -443,7 +443,7 @@ class GetUserRoleTests(TestCase):
 
         fetched_user = get_user_model().objects.get(pk=self.user.pk)
         N = 3
-        with self.assertNumQueries(N):  # One query (fetch roles) per call
+        with self.assertNumQueries(1):  # One query (fetch roles) for any number of calls
             for i in range(N):
                 user_roles = get_user_roles(fetched_user)
 
@@ -533,7 +533,7 @@ class AvailablePermNamesTests(TestCase):
     def test_queries_no_prefetch(self):
         fetched_user = get_user_model().objects.get(pk=self.user.pk)
         N = 3
-        with self.assertNumQueries(2 * N):  # Two query (fetch roles, fetch permissions) per call
+        with self.assertNumQueries(2):  # Two query (fetch roles, fetch permissions) for any number of calls
             for i in range(N):
                 perm_names = available_perm_names(fetched_user)
 

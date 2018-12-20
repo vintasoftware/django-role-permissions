@@ -106,7 +106,7 @@ class HasPermissionTests(TestCase):
     def test_queries_no_prefetch(self):
         fetched_user = get_user_model().objects.get(pk=self.user.pk)
         N = 3
-        with self.assertNumQueries(2 * N):  # Two query (fetch roles, fetch permissions) per call
+        with self.assertNumQueries(2):  # Two query (fetch roles, fetch permissions) for any number of calls
             for i in range(N):
                 has_permission(fetched_user, 'permission1')
 
