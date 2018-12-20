@@ -64,10 +64,18 @@ def available_perm_names(user):
        Query efficient; especially when prefetch_related('group', 'user_permissions') on user object.
        No side-effects; permissions are not created in DB as side-effect.
     """
-    roles = get_user_roles(user)
-    perm_names = set(p for role in roles for p in role.permission_names_list())
-    return [p.codename for p in user.user_permissions.all() if p.codename in perm_names] \
-                                                                        if roles else []  # e.g., user == None
+    try:
+        return user._available_perm_names
+
+    except AttributeError:
+        roles = get_user_roles(user)
+        if roles:
+            perm_names = set(p for role in roles for p in role.permission_names_list())
+            user._available_perm_names = [p.codename for p in user.user_permissions.all() if p.codename in perm_names]
+        else:
+            user._available_perm_names = []
+
+    return user._available_perm_names
 
 
 def grant_permission(user, permission_name):
