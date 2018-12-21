@@ -128,6 +128,7 @@ class AbstractUserRole(object):
 
         group, _created = cls.get_or_create_group()
         user.groups.remove(group)
+        _clear_user_roles_cache(user)
 
         # Grab the adjusted true permissions after the removal
         new_adjusted_true_permissions = cls._get_adjusted_true_permissions(user)
