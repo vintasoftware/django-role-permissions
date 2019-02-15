@@ -6,7 +6,7 @@
 
 ``django-role-permissions`` is a django app for role based permissions. It's built on top of django ``contrib.auth`` user ```Group``` and ``Permission`` functionalities and it does not add any other models to your project.  
 
-``django-role-permissions`` supports Django versions from 1.5 till the latest.
+``django-role-permissions`` supports Django versions from 1.5 until the latest.
 
 Version 2.x now supports multiple roles!
 
@@ -16,13 +16,13 @@ Documentation is available at:
 
 [http://django-role-permissions.readthedocs.org/](http://django-role-permissions.readthedocs.org/)
 
-If you are still using an 1.x version the old documentation is at:
+If you are still using the 1.x version the old documentation is at:
 
 [http://django-role-permissions.readthedocs.io/en/1.x/](http://django-role-permissions.readthedocs.io/en/1.x/)
 
 ## Version 1.x support
 
-No new features will be added to version 1.x, neither is it going to be officially supported. However, there's a [1.x](https://github.com/vintasoftware/django-role-permissions/tree/1.x) branch. PRs and bug fixes are welcome there and we may push new versions to PyPI.
+No new features will be added to version 1.x, neither is it going to be officially supported. However, there's still a [1.x](https://github.com/vintasoftware/django-role-permissions/tree/1.x) branch. PRs and bug fixes are welcome there and we may push new versions to PyPI.
 
 ## 2.x release notes
 
@@ -36,8 +36,8 @@ A special thanks to [@kavdev](https://github.com/kavdev) for working on multiple
 
 ## Running tests
 
-This packages uses `tox` to run tests on multiple evironments, please make sure they are passing before submiting a pull request.
-To run tests, install tox and run it in the command line from this project folder:
+This packages uses `tox` to run tests on multiple evironments, please make sure they are passing before submitting a pull request.
+To run tests, install tox and run it in the command line from this project's folder:
 
 ``$ tox``
 
@@ -48,7 +48,7 @@ If you have any questions or need help, please send an email to: contact@vinta.c
 ## Commercial Support
 [![alt text](https://avatars2.githubusercontent.com/u/5529080?s=200&v=4 "Vinta Logo")](https://vintasoftware.com)
 
-This project, as other Vinta open-source projects, is used in products of Vinta clients. We are always looking for exciting work, so if you need any commercial support, feel free to get in touch: contact@vinta.com.br
+This project, as other Vinta open-source projects, is used in products of Vinta's clients. We are always looking for exciting work, so if you need any commercial support, feel free to get in touch: contact@vinta.com.br
 
-Copyright (c) 2018 Vinta Serviços e Soluções Tecnológicas Ltda.
+Copyright (c) 2019 Vinta Serviços e Soluções Tecnológicas Ltda.
 [MIT License](LICENSE.txt)
