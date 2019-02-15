@@ -22,7 +22,7 @@ If you are still using an 1.x version the old documentation is at:
 
 ## Version 1.x support
 
-No new features will be added to version 1.x, neither is it going to be officially supported. Although, there's a [1.x](https://github.com/vintasoftware/django-role-permissions/tree/1.x) branch. PRs and bug fixes are welcome there and we may push new versions to PyPI.
+No new features will be added to version 1.x, neither is it going to be officially supported. However, there's a [1.x](https://github.com/vintasoftware/django-role-permissions/tree/1.x) branch. PRs and bug fixes are welcome there and we may push new versions to PyPI.
 
 ## 2.x release notes
 
