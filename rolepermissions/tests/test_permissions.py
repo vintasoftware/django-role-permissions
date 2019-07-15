@@ -62,3 +62,10 @@ class RegisterObjectCheckerDecoratorTests(TestCase):
         restore_function = PermissionsManager.retrieve_checker('new_name')
 
         self.assertTrue(restore_function('', '', ''))
+
+    def test_register_function_call(self):
+        @register_object_checker()
+        def function_name(a, b, c):
+            return True
+
+        self.assertTrue(function_name('', '', ''))
