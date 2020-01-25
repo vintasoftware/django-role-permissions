@@ -13,6 +13,7 @@ requirements = [
     'Django>=1.5',
     'django-discover-runner',
     'six',
+    'django-request-cache==1.1.0'
 ]
 test_requirements = [
     'model-mommy==1.3.1',

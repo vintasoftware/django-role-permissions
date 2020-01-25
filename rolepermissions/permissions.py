@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django_request_cache import cache_for_request
+
 from rolepermissions.exceptions import (
     RolePermissionScopeException, CheckerNotRegistered)
 from rolepermissions.roles import get_user_roles, get_or_create_permission
@@ -38,6 +40,7 @@ def get_permission(permission_name):
     return permission
 
 
+@cache_for_request
 def available_perm_status(user):
     """
     Get a boolean map of the permissions available to a user
@@ -56,6 +59,7 @@ def available_perm_status(user):
     return permission_hash
 
 
+@cache_for_request
 def available_perm_names(user):
     """
     Return a list of permissions codenames available to a user, based on that user's roles.
