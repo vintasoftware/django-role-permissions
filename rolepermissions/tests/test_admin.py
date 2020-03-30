@@ -64,6 +64,13 @@ class SyncRolesTest(TestCase):
         self.assertIn('admin_perm1', permissions)
         self.assertNotIn('admin_perm2', permissions)
 
+    def test_sync_all_permissions(self):
+        out = StringIO()
+        call_command('sync_roles', all_permissions=True, stdout=out)
+        permissions = [perm['codename'] for perm in Permission.objects.all().values('codename')]
+        self.assertIn('admin_perm1', permissions)
+        self.assertIn('admin_perm2', permissions)
+
     def test_sync_user_role_permissions(self):
         user = mommy.make(get_user_model())
         grp1 = mommy.make(Group)

@@ -21,6 +21,13 @@ class Command(BaseCommand):
             default=False,
             help='Re-assign all User roles -- resets user Permissions to defaults defined by role(s) !! CAUTION !!',
         )
+        parser.add_argument(
+            '--all_permissions',
+            action='store_true',
+            dest='all_permissions',
+            default=False,
+            help='Create all new permissions instead of only permissions with default true',
+        )
 
     def handle(self, *args, **options):
         # Sync auth.Group with current registered roles (leaving existing groups intact!)
@@ -29,7 +36,10 @@ class Command(BaseCommand):
             if created:
                 self.stdout.write("Created Group: %s from Role: %s" % (group.name, role.get_name()))
             # Sync auth.Permission with permissions for this role
-            role.get_default_true_permissions()
+            if options.get('all_permissions', False):
+                role.get_all_permissions()
+            else:
+                role.get_default_true_permissions()
 
         if options.get('reset_user_permissions', False):  # dj1.7 compat
             # Push any permission changes made to roles and remove any unregistered roles from all auth.Users
