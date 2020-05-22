@@ -1,7 +1,13 @@
 from collections import namedtuple
 from django.core.management import call_command
 from django.test import TestCase
-from django.utils.six import StringIO
+
+try:
+    # django 3 don't have django.utils.six
+    from django.utils.six import StringIO
+except ImportError:
+    from io import StringIO
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 
@@ -63,6 +69,13 @@ class SyncRolesTest(TestCase):
         permissions = [perm['codename'] for perm in Permission.objects.all().values('codename')]
         self.assertIn('admin_perm1', permissions)
         self.assertNotIn('admin_perm2', permissions)
+
+    def test_sync_all_permissions(self):
+        out = StringIO()
+        call_command('sync_roles', all_permissions=True, stdout=out)
+        permissions = [perm['codename'] for perm in Permission.objects.all().values('codename')]
+        self.assertIn('admin_perm1', permissions)
+        self.assertIn('admin_perm2', permissions)
 
     def test_sync_user_role_permissions(self):
         user = mommy.make(get_user_model())

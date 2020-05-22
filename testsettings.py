@@ -43,6 +43,11 @@ elif dj_version >= LooseVersion('2.0'):
         'django.contrib.messages.middleware.MessageMiddleware',
     )
 
+if dj_version >= LooseVersion('3.0'):
+    MIDDLEWARE = MIDDLEWARE + (
+        'django.contrib.sessions.middleware.SessionMiddleware',
+    )
+
 if dj_version >= LooseVersion('1.8'):
     TEMPLATES = [
         {
