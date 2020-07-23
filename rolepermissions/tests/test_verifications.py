@@ -1,5 +1,5 @@
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.contrib.auth import get_user_model
 
 from model_mommy import mommy
@@ -71,6 +71,21 @@ class HasRoleTests(TestCase):
     def test_none_user_param(self):
         self.assertFalse(has_role(None, 'ver_role1'))
 
+    def test_superuser_with_superpowers(self):
+        user = self.user
+        user.is_superuser = True
+
+        self.assertTrue(has_role(user, VerRole1))
+        self.assertTrue(has_role(user, VerRole2))
+
+    @override_settings(ROLEPERMISSIONS_SUPERUSER_SUPERPOWERS=False)
+    def test_superuser_without_superpowers(self):
+        user = self.user
+        user.is_superuser = True
+
+        self.assertTrue(has_role(user, VerRole1))
+        self.assertFalse(has_role(user, VerRole2))
+
 
 class HasPermissionTests(TestCase):
     def setUp(self):
@@ -117,6 +132,21 @@ class HasPermissionTests(TestCase):
             for i in range(N):
                 has_permission(fetched_user, 'permission1')
 
+    def test_superuser_with_superpowers(self):
+        user = self.user
+        user.is_superuser = True
+
+        self.assertTrue(has_permission(user, 'permission1'))
+        self.assertTrue(has_permission(user, 'permission5'))
+
+    @override_settings(ROLEPERMISSIONS_SUPERUSER_SUPERPOWERS=False)
+    def test_superuser_without_superpowers(self):
+        user = self.user
+        user.is_superuser = True
+
+        self.assertTrue(has_permission(user, 'permission1'))
+        self.assertFalse(has_permission(user, 'permission5'))
+
 
 class HasObjectPermissionTests(TestCase):
 
@@ -143,3 +173,18 @@ class HasObjectPermissionTests(TestCase):
         user = mommy.make(get_user_model())
 
         self.assertTrue(has_object_permission('obj_checker', user, True))
+
+    def test_superuser_with_superpowers(self):
+        user = self.user
+        user.is_superuser = True
+
+        self.assertTrue(has_object_permission('obj_checker', user, True))
+        self.assertTrue(has_object_permission('obj_checker', user, False))
+
+    @override_settings(ROLEPERMISSIONS_SUPERUSER_SUPERPOWERS=False)
+    def test_superuser_without_superpowers(self):
+        user = self.user
+        user.is_superuser = True
+
+        self.assertTrue(has_object_permission('obj_checker', user, True))
+        self.assertFalse(has_object_permission('obj_checker', user, False))
