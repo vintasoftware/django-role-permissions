@@ -1,0 +1,15 @@
+# v3.1.1
+
+- Performance improvement for the `available_perm_status` and `remove_role_from_user` methods (https://github.com/vintasoftware/django-role-permissions/pull/122)
+- Fix import compatibility with Python 3.9 (https://github.com/vintasoftware/django-role-permissions/pull/123)
+- Removes support for Python 3.5
+
+# v2.0
+
+There are major changes from version 1.x to 2.x. Here are some of them worth noting:
+
+- Django role permissions now supports multiple role attribution
+- Function names have changed to adapt to multiple roles
+- Import paths have changed
+
+A special thanks to [@kavdev](https://github.com/kavdev) for working on multiple role support.
