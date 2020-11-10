@@ -20,20 +20,6 @@ If you are still using the 1.x version the old documentation is at:
 
 [http://django-role-permissions.readthedocs.io/en/1.x/](http://django-role-permissions.readthedocs.io/en/1.x/)
 
-## Version 1.x support
-
-No new features will be added to version 1.x, neither is it going to be officially supported. However, there's still a [1.x](https://github.com/vintasoftware/django-role-permissions/tree/1.x) branch. PRs and bug fixes are welcome there and we may push new versions to PyPI.
-
-## 2.x release notes
-
-There are major changes from version 1.x to 2.x. Here are some of them worth noting:
-
-- Django role permissions now supports multiple role attribution
-- Function names have changed to adapt to multiple roles
-- Import paths have changed
-
-A special thanks to [@kavdev](https://github.com/kavdev) for working on multiple role support.
-
 ## Running tests
 
 This packages uses `tox` to run tests on multiple evironments, please make sure they are passing before submitting a pull request.
