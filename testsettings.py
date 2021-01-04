@@ -26,21 +26,18 @@ try:
 except:
     dj_version = LooseVersion('1.10')
 
-if dj_version >= LooseVersion('1.5') and dj_version < LooseVersion('1.6'):
-    INSTALLED_APPS += ('discover_runner',)
-    TEST_RUNNER = 'discover_runner.DiscoverRunner'
-
 SECRET_KEY = 'abcde12345'
 
-if dj_version >= LooseVersion('1.7') and dj_version < LooseVersion('2.0'):
-    MIDDLEWARE_CLASSES = (
-        'django.middleware.common.CommonMiddleware',
-        'django.middleware.csrf.CsrfViewMiddleware',
-    )
-elif dj_version >= LooseVersion('2.0'):
+if dj_version >= LooseVersion('2.0'):
     MIDDLEWARE = (
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+    )
+
+if dj_version >= LooseVersion('3.0'):
+    MIDDLEWARE = MIDDLEWARE + (
+        'django.contrib.sessions.middleware.SessionMiddleware',
     )
 
 if dj_version >= LooseVersion('1.8'):

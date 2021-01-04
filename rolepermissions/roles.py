@@ -135,8 +135,7 @@ class AbstractUserRole(object):
         # Remove true permissions that were default granted only by the removed role
         permissions_to_remove = (current_adjusted_true_permissions
                                  .difference(new_adjusted_true_permissions))
-        for permission in permissions_to_remove:
-            user.user_permissions.remove(permission)
+        user.user_permissions.remove(*permissions_to_remove)
 
         return group
 
@@ -144,6 +143,14 @@ class AbstractUserRole(object):
     def permission_names_list(cls):
         available_permissions = getattr(cls, 'available_permissions', {})
         return available_permissions.keys()
+
+    @classmethod
+    def get_all_permissions(cls):
+        permission_names = list(cls.permission_names_list())
+        if permission_names:
+            return cls.get_or_create_permissions(permission_names)
+
+        return []
 
     @classmethod
     def get_default_true_permissions(cls):

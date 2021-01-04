@@ -47,12 +47,11 @@ def available_perm_status(user):
     roles = get_user_roles(user)
     permission_hash = {}
 
-    for role in roles:
-        permission_names = role.permission_names_list()
+    user_permission_names = set(user.user_permissions.values_list("codename", flat=True))
 
-        for permission_name in permission_names:
-            permission_hash[permission_name] = get_permission(
-                permission_name) in user.user_permissions.all()
+    for role in roles:
+        for permission_name in role.permission_names_list():
+            permission_hash[permission_name] = permission_name in user_permission_names
 
     return permission_hash
 

@@ -1,11 +1,14 @@
 from __future__ import unicode_literals
 
 import re
-import collections
+try:
+    from collections.abc import Callable
+except ImportError:
+    from collections import Callable
 
 
 def user_is_authenticated(user):
-    if isinstance(user.is_authenticated, collections.Callable):
+    if isinstance(user.is_authenticated, Callable):
         authenticated = user.is_authenticated()
     else:
         authenticated = user.is_authenticated
