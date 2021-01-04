@@ -28,6 +28,7 @@ def register_object_checker(name=None):
     def fuction_decorator(func):
         checker_name = name if name else func.__name__
         PermissionsManager.register_checker(checker_name, func)
+        return func
     return fuction_decorator
 
 
