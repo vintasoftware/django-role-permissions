@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib import admin, auth
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.admin.sites import NotRegistered
 from rolepermissions import roles
 
 ROLEPERMISSIONS_REGISTER_ADMIN = getattr(settings, 'ROLEPERMISSIONS_REGISTER_ADMIN', False)
@@ -37,5 +38,8 @@ class RolePermissionsUserAdmin(RolePermissionsUserAdminMixin, UserAdmin):
 
 
 if ROLEPERMISSIONS_REGISTER_ADMIN:
-    admin.site.unregister(UserModel)
+    try:
+        admin.site.unregister(UserModel)
+    except NotRegistered:
+        pass
     admin.site.register(UserModel, RolePermissionsUserAdmin)
