@@ -116,7 +116,7 @@ class HasPermissionDetailView(DetailView):
 
 class PermissionOverhiddenRedirectView(DetailView):
 
-    @method_decorator(has_permission_decorator('permission2', redirect_to_login=False))
+    @method_decorator(has_permission_decorator('permission2', redirect_to_login=False, redirect_url='/'))
     def dispatch(self, request, *args, **kwargs):
         return super(PermissionOverhiddenRedirectView, self).dispatch(request, *args, **kwargs)
 
@@ -129,7 +129,7 @@ class PermissionOverhiddenRedirectView(DetailView):
 
 class RoleOverhiddenRedirectView(DetailView):
 
-    @method_decorator(has_role_decorator('permission2', redirect_to_login=False))
+    @method_decorator(has_role_decorator('permission2', redirect_to_login=False, redirect_url='/'))
     def dispatch(self, request, *args, **kwargs):
         return super(RoleOverhiddenRedirectView, self).dispatch(request, *args, **kwargs)
 
