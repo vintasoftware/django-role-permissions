@@ -116,9 +116,22 @@ class HasPermissionDetailView(DetailView):
 
 class PermissionOverhiddenRedirectView(DetailView):
 
-    @method_decorator(has_permission_decorator('permission2', redirect_to_login=False, redirect_url='/'))
+    @method_decorator(has_permission_decorator('permission2', redirect_to_login=False))
     def dispatch(self, request, *args, **kwargs):
         return super(PermissionOverhiddenRedirectView, self).dispatch(request, *args, **kwargs)
+
+    def get_object(self):
+        return True
+
+    def render_to_response(self, context, **response_kwargs):
+        return HttpResponse("Test")
+
+
+class PermissionOverhiddenRedirectViewRedirectUrl(DetailView):
+
+    @method_decorator(has_permission_decorator('permission2', redirect_to_login=True, redirect_url='/'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(PermissionOverhiddenRedirectViewRedirectUrl, self).dispatch(request, *args, **kwargs)
 
     def get_object(self):
         return True
@@ -132,6 +145,19 @@ class RoleOverhiddenRedirectView(DetailView):
     @method_decorator(has_role_decorator('permission2', redirect_to_login=False, redirect_url='/'))
     def dispatch(self, request, *args, **kwargs):
         return super(RoleOverhiddenRedirectView, self).dispatch(request, *args, **kwargs)
+
+    def get_object(self):
+        return True
+
+    def render_to_response(self, context, **response_kwargs):
+        return HttpResponse("Test")
+
+
+class RoleOverhiddenRedirectViewRedirectUrl(DetailView):
+
+    @method_decorator(has_role_decorator('permission2', redirect_to_login=True, redirect_url='/'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(RoleOverhiddenRedirectViewRedirectUrl, self).dispatch(request, *args, **kwargs)
 
     def get_object(self):
         return True
