@@ -11,7 +11,6 @@ package = 'rolepermissions'
 
 requirements = [
     'Django>=1.5',
-    'django-discover-runner',
     'six',
 ]
 test_requirements = [
