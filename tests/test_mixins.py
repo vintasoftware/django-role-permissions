@@ -106,7 +106,7 @@ class HasRoleDecoratorTests(TestCase):
 
     @override_settings(
         ROLEPERMISSIONS_REDIRECT_TO_LOGIN=True, LOGIN_URL='/login/',
-        ROOT_URLCONF='rolepermissions.tests.mock_urls')
+        ROOT_URLCONF='tests.mock_urls')
     def test_overhidden_redirect_to_login(self):
         request = self.request
 
@@ -170,7 +170,7 @@ class HasPermissionDecoratorTests(TestCase):
 
     @override_settings(
         ROLEPERMISSIONS_REDIRECT_TO_LOGIN=True, LOGIN_URL='/login/',
-        ROOT_URLCONF='rolepermissions.tests.mock_urls')
+        ROOT_URLCONF='tests.mock_urls')
     def test_overhidden_redirect_to_login(self):
         request = self.request
 
