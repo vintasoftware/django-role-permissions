@@ -1,6 +1,6 @@
 # django-role-permissions
 
-[![Build Status](https://travis-ci.org/vintasoftware/django-role-permissions.svg?branch=master)](https://travis-ci.org/vintasoftware/django-role-permissions)
+[![Build Status](https://github.com/vintasoftware/django-role-permissions/actions/workflows/tests.yml/badge.svg)](https://github.com/bornhack/bornhack-website/actions)
 [![Current version at PyPI](https://img.shields.io/pypi/v/django-role-permissions.svg)](https://pypi.python.org/pypi/django-role-permissions)
 ![Supported Python Versions](https://img.shields.io/pypi/pyversions/django-role-permissions.svg)
 
