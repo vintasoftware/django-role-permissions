@@ -2,8 +2,6 @@ from __future__ import unicode_literals
 
 import inspect
 
-from six import add_metaclass
-
 from django.contrib.auth.models import Group, Permission
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
@@ -43,8 +41,7 @@ class RolesClassRegister(type):
         return role_class
 
 
-@add_metaclass(RolesClassRegister)
-class AbstractUserRole(object):
+class AbstractUserRole(metaclass=RolesClassRegister):
 
     @classmethod
     def get_name(cls):
