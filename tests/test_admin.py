@@ -1,12 +1,8 @@
 from collections import namedtuple
+from io import StringIO
+
 from django.core.management import call_command
 from django.test import TestCase
-
-try:
-    # django 3 don't have django.utils.six
-    from django.utils.six import StringIO
-except ImportError:
-    from io import StringIO
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission

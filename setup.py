@@ -11,7 +11,6 @@ package = 'rolepermissions'
 
 requirements = [
     'Django>=1.5',
-    'six',
 ]
 test_requirements = [
     'model-mommy==1.3.1',
