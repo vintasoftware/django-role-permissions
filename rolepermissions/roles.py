@@ -34,14 +34,25 @@ class RolesManager(object):
 
 class RolesClassRegister(type):
 
+    @staticmethod
+    def is_abstract(meta):
+        if meta is not None:
+            return getattr(meta, 'abstract', False)
+        else:
+            return False
+
     def __new__(cls, name, parents, dct):
+        meta = dct.pop("Meta", None)
         role_class = super(RolesClassRegister, cls).__new__(cls, name, parents, dct)
-        if object not in parents:
+        if not cls.is_abstract(meta):
             registered_roles[role_class.get_name()] = role_class
         return role_class
 
 
 class AbstractUserRole(metaclass=RolesClassRegister):
+
+    class Meta:
+        abstract = True
 
     @classmethod
     def get_name(cls):
