@@ -15,11 +15,13 @@ class TemRole1(AbstractUserRole):
         'permission2': True,
     }
 
+
 class TemRole2(AbstractUserRole):
     available_permissions = {
         'permission3': True,
         'permission4': False,
     }
+
 
 class TemRole3(AbstractUserRole):
     role_name = 'new_name'

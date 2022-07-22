@@ -31,7 +31,7 @@ class PermissionsManagerTests(TestCase):
         self.assertEquals(PermissionsManager.retrieve_checker('func_name'), func)
 
     def test_restore_unregistered_function(self):
-        
+
         with self.assertRaises(CheckerNotRegistered):
             PermissionsManager.retrieve_checker('func_name')
 
@@ -41,7 +41,7 @@ class RegisterObjectCheckerDecoratorTests(TestCase):
     def setUp(self):
         PermissionsManager._checkers = {}
 
-    def test_resgisters_function(self):
+    def test_registers_function(self):
         @register_object_checker()
         def function_name(a, b, c):
             return True
