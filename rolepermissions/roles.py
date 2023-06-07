@@ -42,7 +42,7 @@ class RolesClassRegister(type):
             return False
 
     def __new__(cls, name, parents, dct):
-        meta = dct.pop("Meta", None)
+        meta = dct.get("Meta", None)
         role_class = super(RolesClassRegister, cls).__new__(cls, name, parents, dct)
         if not cls.is_abstract(meta):
             registered_roles[role_class.get_name()] = role_class
