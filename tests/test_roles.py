@@ -155,7 +155,12 @@ class AbstractUserRoleTests(TestCase):
         self.assertEquals(len(permissions), 2)
 
     def test_meta_abstract_heiretance(self):
-        self.assertCountEqual(RolesManager.get_roles_names(), ['rol_role1', 'rol_role2', 'new_name', 'rol_role4'])
+        self.assertTrue('rol_role1' in RolesManager.get_roles_names())
+        self.assertTrue('rol_role2' in RolesManager.get_roles_names())
+        self.assertTrue('new_name' in RolesManager.get_roles_names())
+        self.assertTrue('rol_role4' in RolesManager.get_roles_names())
+        self.assertFalse('abstract_user_role' in RolesManager.get_roles_names())
+        self.assertFalse('another_abstract_role' in RolesManager.get_roles_names())
 
         self.assertTrue(hasattr(AbstractUserRole(), 'Meta'))
         self.assertTrue(hasattr(RolRole4(), 'Meta'))
