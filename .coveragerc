@@ -1,8 +1,5 @@
 [run]
-
 branch = True
-parallel = True
-concurrency=multiprocessing
 source = ./rolepermissions
 
 omit =
