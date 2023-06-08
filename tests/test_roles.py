@@ -29,11 +29,13 @@ class RolRole3(AbstractUserRole):
         'permission6': False,
     }
 
+
 class RolRole4(AbstractUserRole):
     available_permissions = {
         'permission_number_7': True,
         'PermissionNumber8': True,
     }
+
 
 class AbstractUserRoleTests(TestCase):
 

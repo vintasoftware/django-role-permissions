@@ -44,3 +44,6 @@ output/*/index.html
 
 # Sphinx
 docs/_build
+
+# Pycharm
+.idea/

@@ -36,9 +36,7 @@ if dj_version >= LooseVersion('2.0'):
     )
 
 if dj_version >= LooseVersion('3.0'):
-    MIDDLEWARE = MIDDLEWARE + (
-        'django.contrib.sessions.middleware.SessionMiddleware',
-    )
+    MIDDLEWARE += 'django.contrib.sessions.middleware.SessionMiddleware',
 
 if dj_version >= LooseVersion('1.8'):
     TEMPLATES = [

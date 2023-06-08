@@ -15,11 +15,13 @@ class VerRole1(AbstractUserRole):
         'permission2': True,
     }
 
+
 class VerRole2(AbstractUserRole):
     available_permissions = {
         'permission3': True,
         'permission4': False,
     }
+
 
 class VerRole3(AbstractUserRole):
     role_name = 'ver_new_name'
