@@ -37,6 +37,11 @@ class RolRole4(AbstractUserRole):
     }
 
 
+class AnotherAbstractRole(RolRole4):
+    class Meta:
+        abstract = True
+
+
 class AbstractUserRoleTests(TestCase):
 
     def setUp(self):
@@ -149,6 +154,13 @@ class AbstractUserRoleTests(TestCase):
         self.assertIn('Permission Number8', permission_labels)
         self.assertEquals(len(permissions), 2)
 
+    def test_meta_abstract_heiretance(self):
+        self.assertCountEqual(RolesManager.get_roles_names(), ['rol_role1', 'rol_role2', 'new_name', 'rol_role4'])
+
+        self.assertTrue(hasattr(AbstractUserRole(), 'Meta'))
+        self.assertTrue(hasattr(RolRole4(), 'Meta'))
+        self.assertTrue(hasattr(AnotherAbstractRole(), 'Meta'))
+
 
 class RolesManagerTests(TestCase):
 
@@ -172,20 +184,20 @@ class GetOrCreatePermissionsTests(TestCase):
         perm_camel, _created = get_or_create_permission("myPermName2")
         self.assertEqual(perm_camel.name, "My Perm Name2")
 
-    def test_create_and_get_named_permission(self) :
+    def test_create_and_get_named_permission(self):
         perm1, _created = get_or_create_permission("my_perm_name", name="My Custom Name")
         self.assertEqual(perm1.name, "My Custom Name")
 
         perm2, _created = get_or_create_permission("my_perm_name", name="My Custom Name")
         self.assertEqual(perm1, perm2)
 
-    def test_create_and_get_specialty_named_permission(self) :
+    def test_create_and_get_specialty_named_permission(self):
         def name_perm(codename):
             return "Custom-"+codename
         perm, _created = get_or_create_permission("my_perm_name", name_perm)
         self.assertEqual(perm.name, "Custom-my_perm_name")
 
-    def test_backwards_compat_with_unnamed_permission(self) :
+    def test_backwards_compat_with_unnamed_permission(self):
         unnamed_perm, _created = get_or_create_permission("my_perm_name", name="")
         self.assertEqual(unnamed_perm.name, "")
 
