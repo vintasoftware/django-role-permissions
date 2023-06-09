@@ -1,3 +1,12 @@
+# v3.2.0
+
+- `has_role_decorator` and `has_permission_decorator` now have a keyword parameter (redirect_url) to select the redirect url, it takes precedence over `redirect_to_login`
+- Allow setting a role as abstract so it becomes be unusable
+- Drops support for python 3.5 and 3.6
+- Adds support for python 3.10 and 3.11
+- Drops support for django 2.2, 3.0, 3.1, and 4.0
+- Adds support for django 4.1 and 4.2
+
 # v3.1.1
 
 - Performance improvement for the `available_perm_status` and `remove_role_from_user` methods (https://github.com/vintasoftware/django-role-permissions/pull/122)

@@ -1,6 +1,6 @@
 # django-role-permissions
 
-[![Build Status](https://github.com/vintasoftware/django-role-permissions/actions/workflows/tests.yml/badge.svg)](https://github.com/bornhack/bornhack-website/actions)
+[![Build Status](https://github.com/vintasoftware/django-role-permissions/actions/workflows/build.yml/badge.svg)](https://github.com/vintasoftware/django-role-permissions/actions/workflows/build.yml)
 [![Coverage Status](https://coveralls.io/repos/github/vintasoftware/django-role-permissions/badge.svg?branch=master)](https://coveralls.io/github/vintasoftware/django-role-permissions?branch=master)
 [![Current version at PyPI](https://img.shields.io/pypi/v/django-role-permissions.svg)](https://pypi.python.org/pypi/django-role-permissions)
 ![Supported Python Versions](https://img.shields.io/pypi/pyversions/django-role-permissions.svg)
@@ -27,6 +27,20 @@ This packages uses `tox` to run tests on multiple evironments, please make sure 
 To run tests, install tox and run it in the command line from this project's folder:
 
 ``$ tox``
+
+## Maintainers
+
+### How to Release:
+
+#### Pre release:
+- Include the changes in `CHANGELOG`
+- Update the version in `rolepermissions/__init__.py`
+
+#### Release:
+- Run the github action [release](https://github.com/vintasoftware/django-role-permissions/actions/workflows/release.yml)
+
+#### Post release:
+- Check if docs were updated at [readthedocs](http://django-role-permissions.readthedocs.org/).
 
 ## Help
 

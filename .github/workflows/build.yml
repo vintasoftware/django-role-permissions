@@ -1,12 +1,35 @@
-name: Tests
+name: build
 on:
   push:
   pull_request:
     branches:
       - master
 jobs:
-  Build:
-    runs-on: ubuntu-20.04
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          sudo apt-get -qq update && sudo apt-get -qq install python3-sphinx -y
+          pip install --upgrade pip && pip install build twine
+      - name: Build docs
+        run: |
+          cd docs
+          make html
+          cd ..
+      - name: Build
+        run: |
+          python -m build
+          twine check dist/*
+          ls -l dist
+
+  tests:
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]

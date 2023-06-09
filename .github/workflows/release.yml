@@ -1,0 +1,30 @@
+name: release
+
+on: workflow_dispatch
+
+jobs:
+  release:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+      - name: Install dependencies
+        run: pip install --upgrade pip && pip install build twine
+      - name: set up env
+        run: echo "TAG=$(eval 'python setup.py version')" >> $GITHUB_ENV
+      - name: Build
+        run: |
+          python -m build
+          twine check dist/*
+      - name: Release
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: twine upload dist/*
+      - uses: rickstaa/action-create-tag@v1
+        id: "tag_create"
+        with:
+          tag: ${{ env.TAG }}
