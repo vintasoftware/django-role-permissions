@@ -239,14 +239,14 @@ class RedirectTests(TestCase):
         with self.assertRaises(PermissionDenied):
             RoleOverhiddenRedirectView.as_view()(request)
 
-    def test_role_overhiding_setting(self):
+    def test_role_overhiding_new_redirect(self):
         request = self.request
 
         response = RoleOverhiddenRedirectViewRedirectUrl.as_view()(request)
         self.assertEquals(response.status_code, 302)
         self.assertIn('/new_redirect', response['Location'])
 
-    def test_role_overhiding_setting(self):
+    def test_permission_overhiding_new_redirect(self):
         request = self.request
 
         response = PermissionOverhiddenRedirectViewRedirectUrl.as_view()(request)
