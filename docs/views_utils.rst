@@ -11,9 +11,9 @@ They are meant to be used on function based views.
 .. function:: has_role_decorator(role)
 
 Accepts the same arguments as ``has_role`` function and raises PermissionDenied in case it returns ``False``.
-You can pass an optional key word argument ``redirect_to_login`` to overhide the ``ROLEPERMISSIONS_REDIRECT_TO_LOGIN`` setting.
-You can also pass an optional key word argument ``redirect_url`` to specify the view to return in case of permission denied. 
-When ``redirect_url`` is specified it overrides ``redirect_to_login`` and ``ROLEPERMISSIONS_REDIRECT_TO_LOGIN``.
+You can pass an optional keyword argument ``redirect_to_login`` to overhide the ``ROLEPERMISSIONS_REDIRECT_TO_LOGIN`` setting.
+You can also pass an optional keyword argument ``redirect_url`` to specify the view to return in case of PermissionDenied. 
+When ``redirect_url`` is specified, it overrides ``redirect_to_login`` and ``ROLEPERMISSIONS_REDIRECT_TO_LOGIN``.
 
 .. code-block:: python
 
