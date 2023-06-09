@@ -154,7 +154,7 @@ class AbstractUserRoleTests(TestCase):
         self.assertIn('Permission Number8', permission_labels)
         self.assertEquals(len(permissions), 2)
 
-    def test_meta_abstract_heiretance(self):
+    def test_meta_abstract_inheritance(self):
         self.assertTrue('rol_role1' in RolesManager.get_roles_names())
         self.assertTrue('rol_role2' in RolesManager.get_roles_names())
         self.assertTrue('new_name' in RolesManager.get_roles_names())
