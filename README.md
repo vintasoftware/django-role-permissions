@@ -35,6 +35,7 @@ To run tests, install tox and run it in the command line from this project's fol
 #### Pre release:
 - Include the changes in `CHANGELOG`
 - Update the version in `rolepermissions/__init__.py`
+- Update the classifiers in `setup.py`
 
 #### Release:
 - Run the github action [release](https://github.com/vintasoftware/django-role-permissions/actions/workflows/release.yml)
