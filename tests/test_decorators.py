@@ -140,6 +140,32 @@ class RoleOverhiddenRedirectView(DetailView):
         return HttpResponse("Test")
 
 
+class PermissionOverhiddenRedirectViewRedirectUrl(DetailView):
+
+    @method_decorator(has_permission_decorator('permission2', redirect_url='/new_redirect'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(PermissionOverhiddenRedirectViewRedirectUrl, self).dispatch(request, *args, **kwargs)
+
+    def get_object(self):
+        return True
+
+    def render_to_response(self, context, **response_kwargs):
+        return HttpResponse("Test")
+
+
+class RoleOverhiddenRedirectViewRedirectUrl(DetailView):
+
+    @method_decorator(has_role_decorator('permission2', redirect_url='/new_redirect'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(RoleOverhiddenRedirectViewRedirectUrl, self).dispatch(request, *args, **kwargs)
+
+    def get_object(self):
+        return True
+
+    def render_to_response(self, context, **response_kwargs):
+        return HttpResponse("Test")
+
+
 class HasPermissionDecoratorTests(TestCase):
 
     def setUp(self):
@@ -174,7 +200,7 @@ class HasPermissionDecoratorTests(TestCase):
 @override_settings(
     ROLEPERMISSIONS_REDIRECT_TO_LOGIN=True, LOGIN_URL='/login/',
     ROOT_URLCONF='tests.mock_urls')
-class RedirectToLoginTests(TestCase):
+class RedirectTests(TestCase):
 
     def setUp(self):
         self.user = mommy.make(get_user_model())
@@ -212,6 +238,20 @@ class RedirectToLoginTests(TestCase):
 
         with self.assertRaises(PermissionDenied):
             RoleOverhiddenRedirectView.as_view()(request)
+
+    def test_role_overhiding_new_redirect(self):
+        request = self.request
+
+        response = RoleOverhiddenRedirectViewRedirectUrl.as_view()(request)
+        self.assertEquals(response.status_code, 302)
+        self.assertIn('/new_redirect', response['Location'])
+
+    def test_permission_overhiding_new_redirect(self):
+        request = self.request
+
+        response = PermissionOverhiddenRedirectViewRedirectUrl.as_view()(request)
+        self.assertEquals(response.status_code, 302)
+        self.assertIn('/new_redirect', response['Location'])
 
 
 @override_settings(

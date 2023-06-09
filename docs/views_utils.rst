@@ -12,6 +12,8 @@ They are meant to be used on function based views.
 
 Accepts the same arguments as ``has_role`` function and raises PermissionDenied in case it returns ``False``.
 You can pass an optional key word argument ``redirect_to_login`` to overhide the ``ROLEPERMISSIONS_REDIRECT_TO_LOGIN`` setting.
+You can also pass an optional key word argument ``redirect_url`` to specify the view to return in case of permission denied. 
+``redirect_url`` takes precedence over ``redirect_to_login`` and ``ROLEPERMISSIONS_REDIRECT_TO_LOGIN``.
 
 .. code-block:: python
 
@@ -26,6 +28,8 @@ You can pass an optional key word argument ``redirect_to_login`` to overhide the
 
 Accepts the same arguments as ``has_permission`` function and raises PermissionDenied in case it returns ``False``.
 You can pass an optional key word argument ``redirect_to_login`` to overhide the ``ROLEPERMISSIONS_REDIRECT_TO_LOGIN`` setting.
+You can also pass an optional key word argument ``redirect_url`` to specify the view to return in case of permission denied. 
+``redirect_url`` takes precedence over ``redirect_to_login`` and ``ROLEPERMISSIONS_REDIRECT_TO_LOGIN``.
 
 .. code-block:: python
 
@@ -45,7 +49,8 @@ They are meant to be used on class based views.
 
 Add ``HasRoleMixin`` mixin to the desired CBV (class based view) and use the ``allowed_roles`` attribute to set the roles that can access the view.
 ``allowed_roles`` attribute will be passed to ``has_role`` function, and PermissionDenied will be raised in case it returns ``False``.
-You can set an optional ``redirect_to_login`` attribute to overhide the ``ROLEPERMISSIONS_REDIRECT_TO_LOGIN`` setting.
+You can set an optional ``redirect_to_login`` attribute to overhide the ``ROLEPERMISSIONS_REDIRECT_TO_LOGIN`` setting. Just like ``has_role_decorator`` set 
+an optional ``redirect_url`` to specify the view to return incase of permission denied. ``redirect_url`` overrides ``redirect_to_login`` and ``ROLEPERMISSIONS_REDIRECT_TO_LOGIN``.
 
 
 .. code-block:: python
