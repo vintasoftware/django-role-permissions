@@ -62,6 +62,7 @@ setup(
     url='http://github.com/vintasoftware/django-role-permissions',
     license='MIT',
     description='A django app for role based permissions.',
+    long_description_content_type="text/markdown",
     author='Filipe Ximenes',
     author_email='filipeximenes@gmail.com',
     packages=get_packages(package),
